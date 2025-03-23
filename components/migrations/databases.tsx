@@ -40,7 +40,7 @@ export default function ListMigrationDatabase(
     const fetchDatabases = async () => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/migrations/databases`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/databases`
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch databases");

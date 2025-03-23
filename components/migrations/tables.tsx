@@ -17,8 +17,6 @@ interface MigrateTable {
     title: string;
     source_db: string;
     target_db: string;
-    source_tables: string;
-    target_tables: string;
     status: boolean;
     logs: string;
     created_at: string;
@@ -42,18 +40,30 @@ export default function ListMigrationTable(
     const fetchTables = async () => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/migrations/tables`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables`
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch databases");
             }
             const data = await response.json();
-            setDatabases(data.data || []);
+
+            const mappedData: MigrateTable[] = data.data.map((job: any) => ({
+                id: job.id,
+                title: job.title,
+                source_db: job.source?.title || '',
+                target_db: job.target?.title || '',
+                status: job.status,
+                logs: job.logs,
+                created_at: job.created_at,
+                updated_at: job.updated_at,
+            }));
+
+            setDatabases(mappedData);
         } catch (error) {
             toast({
                 variant: "destructive",
                 description: `Error fetching databases: ${error}`,
-            })
+            });
         } finally {
             setLoading(false);
         }
@@ -114,9 +124,7 @@ export default function ListMigrationTable(
                     <TableRow>
                         <TableHead className="w-[100px]">ID</TableHead>
                         <TableHead>Title</TableHead>
-                        <TableHead>Source DB</TableHead>
-                        <TableHead>Target DB</TableHead>
-                        <TableHead>Source Tables</TableHead>
+                        <TableHead>Migration Pair</TableHead>
                         <TableHead>Logs</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Created At</TableHead>
@@ -128,9 +136,7 @@ export default function ListMigrationTable(
                         <TableRow key={db.id}>
                             <TableCell className="font-medium">{db.id}</TableCell>
                             <TableCell>{db.title}</TableCell>
-                            <TableCell>{db.source_db}</TableCell>
-                            <TableCell>{db.target_db}</TableCell>
-                            <TableCell>{db.source_tables}</TableCell>
+                            <TableCell>{db.source_db} {'->'} {db.target_db}</TableCell>
                             <TableCell>{db.logs}</TableCell>
                             <TableCell>{db.status ? "Active" : "Inactive"}</TableCell>
                             <TableCell>{new Date(db.created_at).toLocaleString()}</TableCell>
