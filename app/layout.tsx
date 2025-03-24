@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import { Inter } from 'next/font/google'
-import { WebSocketProvider } from '@/components/providers/WebSocketProvider';
+import { WebSocketProvider } from '@/components/providers/web-socket-provider';
 
 const inter = Inter({
     subsets: ['latin'],

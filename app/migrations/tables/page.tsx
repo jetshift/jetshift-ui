@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import AppLayout from "@/components/layouts/AppLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import {buttonVariants} from "@/components/ui/button"
 import ListMigrationTable from "@/components/migrations/tables";
 import React from "react";

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 
 // ✅ Import from the WebSocketProvider Context
-import {useWebSocket} from "@/components/providers/WebSocketProvider";
+import {useWebSocket} from "@/components/providers/web-socket-provider";
 
 export default function AppLayout(
     {

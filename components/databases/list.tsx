@@ -11,7 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {useToast} from "@/hooks/use-toast"
-import {fetchDatabaseList, checkDatabaseConnection, deleteDatabaseById} from "@/services/databaseService";
+import {fetchDatabaseList, checkDatabaseConnection, deleteDatabaseById} from "@/services/database-service";
 
 interface Database {
     id: number;
