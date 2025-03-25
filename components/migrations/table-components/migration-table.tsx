@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 import {Expand, CircleX} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-
 import TaskCard from "@/components/migrations/table-components/task-card";
 import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
 import {useMigrationTables} from "@/hooks/use-migration-tables";
+import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
 
 export default function MigrationTable() {
@@ -15,6 +15,7 @@ export default function MigrationTable() {
     const [openSchema, setOpenSchema] = useState(false);
 
     const {fetchTables, deleteTable, startMigration, viewSchema} = useMigrationTables();
+    const {subscribe} = useWebSocket();
 
     useEffect(() => {
         (async () => {
@@ -28,6 +29,15 @@ export default function MigrationTable() {
             }
         })();
     }, []);
+
+    // Listen WebSocket and update tasks in tables
+    useEffect(() => {
+        const unsubscribe = subscribe((data) => {
+            console.log("WebSocket Data:", data);
+        });
+        return unsubscribe;  // Clean up to avoid multiple listeners
+    }, [subscribe]);
+
 
     if (loading) return <div>Loading...</div>;
 
@@ -49,7 +59,7 @@ export default function MigrationTable() {
                             <TableCell>{table.id}</TableCell>
                             <TableCell>{table.title}</TableCell>
                             <TableCell>{table.source_db} ➔ {table.target_db}</TableCell>
-                            <TableCell>{table.status ? "Active" : "Inactive"}</TableCell>
+                            <TableCell>{table.status}</TableCell>
                             <TableCell className="flex items-center space-x-2">
                                 <span onClick={() => setSelectedTable(table)} className="cursor-pointer"><Expand color="green"/></span>
                                 <span onClick={() => deleteTable(table.id)} className="cursor-pointer ml-2"><CircleX color="red"/></span>

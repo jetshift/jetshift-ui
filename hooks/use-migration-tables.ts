@@ -29,6 +29,8 @@ export const useMigrationTables = () => {
                 source_table: task.source_table,
                 target_table: task.target_table,
                 status: task.status,
+                config: task.config,
+                stats: task.stats,
                 error: task.error,
             })) || [],
             created_at: job.created_at,
