@@ -15,6 +15,10 @@ export default function TaskCard(
         onStopMigration?: () => void;
     }) {
 
+    const totalSource = task.stats?.total_source_items ?? 0;
+    const totalTarget = task.stats?.total_target_items ?? 0;
+    const completePercentage = totalSource > 0 ? ((totalTarget / totalSource) * 100).toFixed(1) : "0.0";
+
     return (
         <Card>
             <CardHeader>
@@ -23,8 +27,9 @@ export default function TaskCard(
             </CardHeader>
             <CardContent>
                 <p><span className="font-medium">Extract Chunk Size:</span> {task.config?.extract_chunk_size ?? 'N/A'}</p>
-                <p><span className="font-medium">Total Source Items:</span> {task.stats?.total_source_items ?? 0}</p>
-                <p><span className="font-medium">Total Target Items:</span> {task.stats?.total_target_items ?? 0}</p>
+                <p><span className="font-medium">Total Source Items:</span> {totalSource}</p>
+                <p><span className="font-medium">Total Target Items:</span> {totalTarget}</p>
+                <p><span className="font-medium">Complete Percentage:</span> {completePercentage}%</p>
 
                 {task.error
                     ? <p className="text-red-500 mt-2">Error: {task.error}</p>

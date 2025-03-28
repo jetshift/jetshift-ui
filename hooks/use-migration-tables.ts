@@ -59,7 +59,6 @@ export const useMigrationTables = () => {
                 variant: "destructive",
                 description: `Failed to start migration`,
             })
-            throw new Error("Failed to start migration");
         }
         return await response.json();
     };

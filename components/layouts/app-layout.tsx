@@ -17,6 +17,9 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+import {Button} from "@/components/ui/button"
+import {Zap} from "lucide-react";
+
 // ✅ Import from the WebSocketProvider Context
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 
@@ -75,12 +78,10 @@ export default function AppLayout(
                     {/* Right Section */}
                     <div className="flex items-center gap-2 flex-wrap justify-end mt-2 sm:mt-0">
                         {rightSection}
-                        <button
-                            onClick={handleSendMessage}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                            Test WS Message
-                        </button>
+
+                        <Button variant="outline" size="icon" onClick={handleSendMessage} title={`Test WebSocket`}>
+                            <Zap/>
+                        </Button>
                     </div>
                 </header>
 

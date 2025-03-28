@@ -6,6 +6,7 @@ import SchemaViewer from "@/components/migrations/table-components/schema-viewer
 import {useMigrationTables} from "@/hooks/use-migration-tables";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
+import {useToast} from "@/hooks/use-toast";
 
 export default function MigrationTable() {
     const [tables, setTables] = useState<MigrateTable[]>([]);
@@ -16,6 +17,7 @@ export default function MigrationTable() {
 
     const {fetchTables, deleteTable, startMigration, viewSchema} = useMigrationTables();
     const {subscribe} = useWebSocket();
+    const {toast} = useToast();
 
     useEffect(() => {
         (async () => {
@@ -33,11 +35,42 @@ export default function MigrationTable() {
     // Listen WebSocket and update tasks in tables
     useEffect(() => {
         const unsubscribe = subscribe((data) => {
-            console.log("WebSocket Data:", data);
+            const updated = data.message;
+
+            setTables((prevTables) =>
+                prevTables.map((table) => {
+                    if (table.id !== updated.migrate_table_id) return table;
+
+                    return {
+                        ...table,
+                        tasks: table.tasks.map((task) => {
+                            if (task.id !== updated.task_id) return task;
+
+                            return {
+                                ...task,
+                                status: updated.status,
+                                stats: {
+                                    ...task.stats,
+                                    total_source_items: updated.total_source_items,
+                                    total_target_items: updated.total_target_items,
+                                },
+                            };
+                        }),
+                    };
+                })
+            );
         });
-        return unsubscribe;  // Clean up to avoid multiple listeners
+
+        return unsubscribe;
     }, [subscribe]);
 
+    // Sync selectedTable with latest data from `tables`
+    useEffect(() => {
+        if (selectedTable) {
+            const updated = tables.find((t) => t.id === selectedTable.id);
+            if (updated) setSelectedTable(updated);
+        }
+    }, [tables]);
 
     if (loading) return <div>Loading...</div>;
 
@@ -61,8 +94,12 @@ export default function MigrationTable() {
                             <TableCell>{table.source_db} ➔ {table.target_db}</TableCell>
                             <TableCell>{table.status}</TableCell>
                             <TableCell className="flex items-center space-x-2">
-                                <span onClick={() => setSelectedTable(table)} className="cursor-pointer"><Expand color="green"/></span>
-                                <span onClick={() => deleteTable(table.id)} className="cursor-pointer ml-2"><CircleX color="red"/></span>
+                                <span onClick={() => setSelectedTable(table)} className="cursor-pointer">
+                                    <Expand color="green"/>
+                                </span>
+                                <span onClick={() => deleteTable(table.id)} className="cursor-pointer ml-2">
+                                    <CircleX color="red"/>
+                                </span>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -78,9 +115,13 @@ export default function MigrationTable() {
                                 key={task.id}
                                 task={task}
                                 onMigrate={async () => {
-                                    await startMigration(task.migrate_table_id, task.id);
-                                    const updated = await fetchTables();
-                                    setTables(updated);
+                                    const response = await startMigration(task.migrate_table_id, task.id);
+                                    toast({
+                                        variant: response.success ? "default" : "destructive",
+                                        description: response.message,
+                                    });
+                                    // const updated = await fetchTables();
+                                    // setTables(updated);
                                 }}
                                 onViewSchema={async () => {
                                     const schema = await viewSchema(task.migrate_table_id, task.id);
