@@ -7,8 +7,19 @@ import {useMigrationTables} from "@/hooks/use-migration-tables";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
 import {useToast} from "@/hooks/use-toast";
+import {cn} from "@/lib/utils";
 
-export default function MigrationTable() {
+interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
+    type?: string;
+}
+
+export default function ListMigrationTable(
+    {
+        className,
+        type,
+        ...props
+    }: ListMigrationTableProps) {
+
     const [tables, setTables] = useState<MigrateTable[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedTable, setSelectedTable] = useState<MigrateTable | null>(null);
@@ -22,7 +33,7 @@ export default function MigrationTable() {
     useEffect(() => {
         (async () => {
             try {
-                const data = await fetchTables();
+                const data = await fetchTables(type);
                 setTables(data);
             } catch (e) {
                 console.error(e);
@@ -30,7 +41,7 @@ export default function MigrationTable() {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [type]);
 
     // Listen WebSocket and update tasks in tables
     useEffect(() => {
@@ -76,7 +87,7 @@ export default function MigrationTable() {
     if (loading) return <div>Loading...</div>;
 
     return (
-        <div>
+        <div className={cn(className)} {...props}>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -110,32 +121,32 @@ export default function MigrationTable() {
             {selectedTable && (
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-4">Tasks for {selectedTable.title}</h2>
-                        <TaskTable
-                            tasks={selectedTable.tasks}
-                            onMigrate={async (task) => {
-                                const response = await startMigration(task.migrate_table_id, task.id)
-                                toast({
-                                    variant: response.success ? "default" : "destructive",
-                                    description: response.message,
-                                })
-                                const updated = await fetchTables()
-                                setTables(updated)
-                            }}
-                            onViewSchema={async (task) => {
-                                const schema = await viewSchema(task.migrate_table_id, task.id)
-                                setSchemaData(schema)
-                                setOpenSchema(true)
-                            }}
-                            onStopMigration={async (task) => {
-                                // Optional: handle stopping migration
-                                console.log(task)
-                                // const response = await stopMigration(task.migrate_table_id, task.id)
-                                // toast({
-                                //     variant: response.success ? "default" : "destructive",
-                                //     description: response.message,
-                                // })
-                            }}
-                        />
+                    <TaskTable
+                        tasks={selectedTable.tasks}
+                        onMigrate={async (task) => {
+                            const response = await startMigration(task.migrate_table_id, task.id)
+                            toast({
+                                variant: response.success ? "default" : "destructive",
+                                description: response.message,
+                            })
+                            const updated = await fetchTables(type)
+                            setTables(updated)
+                        }}
+                        onViewSchema={async (task) => {
+                            const schema = await viewSchema(task.migrate_table_id, task.id)
+                            setSchemaData(schema)
+                            setOpenSchema(true)
+                        }}
+                        onStopMigration={async (task) => {
+                            // Optional: handle stopping migration
+                            console.log(task)
+                            // const response = await stopMigration(task.migrate_table_id, task.id)
+                            // toast({
+                            //     variant: response.success ? "default" : "destructive",
+                            //     description: response.message,
+                            // })
+                        }}
+                    />
                     {/*</div>*/}
                 </div>
             )}

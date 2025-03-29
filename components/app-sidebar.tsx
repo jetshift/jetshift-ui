@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import {
-    Database,
-    LayoutDashboard,
-    FolderSync
+    DatabaseIcon,
+    LayoutDashboardIcon,
+    SendIcon,
+    RefreshCcwIcon,
 } from "lucide-react"
 
 import {NavMain} from "@/components/nav-main"
@@ -36,13 +37,13 @@ const data = {
         {
             title: "Databases",
             url: "/databases",
-            icon: Database,
+            icon: DatabaseIcon,
             isActive: true,
         },
         {
             title: "Migrations",
             url: "#",
-            icon: FolderSync,
+            icon: SendIcon,
             isActive: true,
             items: [
                 {
@@ -54,6 +55,12 @@ const data = {
                     url: "/migrations/tables",
                 },
             ],
+        },
+        {
+            title: "ETL Tasks",
+            url: "/etl",
+            icon: RefreshCcwIcon,
+            isActive: true,
         },
     ],
     // projects: [
@@ -89,7 +96,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuItem>
                             <Link href="/">
                                 <SidebarMenuButton tooltip='sss'>
-                                    <LayoutDashboard/>
+                                    <LayoutDashboardIcon/>
                                     <span>Dashboard</span>
                                 </SidebarMenuButton>
                             </Link>

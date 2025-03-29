@@ -10,8 +10,7 @@ export default function About() {
     return (
         <AppLayout
             breadcrumbItems={[
-                {label: "Databases", href: "/"},
-                {label: "Sources"},
+                {"label": "Databases"},
             ]}
 
             rightSection={

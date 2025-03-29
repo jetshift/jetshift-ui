@@ -4,8 +4,8 @@ import {MigrateTable} from "@/types/migration";
 export const useMigrationTables = () => {
     const {toast} = useToast();
 
-    const fetchTables = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables`);
+    const fetchTables = async (type?: string) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables${type ? `?type=${type}` : ""}`);
         if (!response.ok) {
             toast({
                 variant: "destructive",

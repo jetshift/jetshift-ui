@@ -10,8 +10,7 @@ export default function About() {
     return (
         <AppLayout
             breadcrumbItems={[
-                {label: "Migrations", href: "/"},
-                {label: "Tables"},
+                {label: "ETL Tasks"},
             ]}
 
             rightSection={
@@ -19,7 +18,7 @@ export default function About() {
             }
         >
             <div>
-                <ListMigrationTable className="mt-2" type="migration" />
+                <ListMigrationTable className="mt-2" type="etl" />
             </div>
 
         </AppLayout>
