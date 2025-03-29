@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {Expand, CircleX} from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Expand, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import TaskTable from "@/components/migrations/table-components/task-table";
 import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
@@ -8,6 +8,7 @@ import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
 import {useToast} from "@/hooks/use-toast";
 import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
     type?: string;
@@ -106,18 +107,31 @@ export default function ListMigrationTable(
                             <TableCell>{table.source_db} ➔ {table.target_db}</TableCell>
                             <TableCell>{table.status.charAt(0).toUpperCase() + table.status.slice(1)}</TableCell>
                             <TableCell className="flex items-center space-x-2">
-                                <span onClick={() => setSelectedTable(table)} className="cursor-pointer">
-                                    <Expand color="green"/>
-                                </span>
-                                <span onClick={() => deleteTable(table.id)} className="cursor-pointer ml-2">
-                                    <CircleX color="red"/>
-                                </span>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    title="View Tasks"
+                                    onClick={() => setSelectedTable(prev => prev?.id === table.id ? null : table)}
+                                >
+                                    <Expand/>
+                                </Button>
+
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    title="Delete"
+                                    className="text-red-600 hover:text-red-700 hover:bg-red-300"
+                                    onClick={() => deleteTable(table.id)}
+                                >
+                                    <XIcon/>
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
 
+            {/* Task details */}
             {selectedTable && (
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-4">Tasks for {selectedTable.title}</h2>

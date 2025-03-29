@@ -1,6 +1,6 @@
-import {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {cn} from "@/lib/utils";
-import {Loader, CircleX} from "lucide-react";
+import {Loader, XIcon} from "lucide-react";
 import {
     Table,
     TableBody,
@@ -11,6 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {useToast} from "@/hooks/use-toast"
+import {Button} from "@/components/ui/button";
 
 interface MigrateDatabase {
     id: number;
@@ -131,12 +132,15 @@ export default function ListMigrationDatabase(
                             <TableCell>{db.status ? "Active" : "Inactive"}</TableCell>
                             <TableCell>{new Date(db.created_at).toLocaleString()}</TableCell>
                             <TableCell className="flex items-center space-x-2">
-                                <span
-                                    title={"Delete job"}
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    title="Delete"
+                                    className="text-red-600 hover:text-red-700 hover:bg-red-300"
                                     onClick={() => deleteDatabase(db.id)}
                                 >
-                                {isDeletingDatabase === db.id ? <Loader/> : <CircleX color={"#E3646F"}/>}
-                                </span>
+                                    {isDeletingDatabase === db.id ? <Loader/> : <XIcon/>}
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}

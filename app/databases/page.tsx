@@ -14,7 +14,7 @@ export default function About() {
             ]}
 
             rightSection={
-                <Link className={buttonVariants({variant: "outline"})} href={"/databases/add"}>Add Source</Link>
+                <Link className={buttonVariants({variant: "outline"})} href={"/databases/add"}>Add Database</Link>
             }
         >
             <div>
