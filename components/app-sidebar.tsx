@@ -35,19 +35,9 @@ const data = {
     navMain: [
         {
             title: "Databases",
-            url: "#",
+            url: "/databases",
             icon: Database,
             isActive: true,
-            items: [
-                {
-                    title: "Sources",
-                    url: "/databases/sources",
-                },
-                {
-                    title: "Targets",
-                    url: "/databases/targets",
-                },
-            ],
         },
         {
             title: "Migrations",
@@ -70,12 +60,12 @@ const data = {
     //     {
     //         name: "Design Engineering",
     //         url: "#",
-    //         icon: Frame,
+    //         icon: Database,
     //     },
     //     {
     //         name: "Sales & Marketing",
     //         url: "#",
-    //         icon: PieChart,
+    //         icon: Database,
     //     },
     //     {
     //         name: "Travel",

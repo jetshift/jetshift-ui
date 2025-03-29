@@ -15,11 +15,12 @@ export default function About() {
             ]}
 
             rightSection={
-                <Link className={buttonVariants({variant: "outline"})} href={"/databases/sources/add"}>Add Source</Link>
+                <Link className={buttonVariants({variant: "outline"})} href={"/databases/add"}>Add Source</Link>
             }
         >
             <div>
-                <ListDatabase className="mt-2" type="source" />
+                {/*<ListDatabase className="mt-2" type="source" />*/}
+                <ListDatabase className="mt-2" />
             </div>
 
         </AppLayout>

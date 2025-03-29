@@ -119,6 +119,25 @@ export default function AddDatabase(
                     <form onSubmit={handleSubmit}>
 
                         <div className="grid grid-cols-1 gap-6 mb-6">
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="dialect">Type</Label>
+                                <Select
+                                    name="type"
+                                    defaultValue="source"
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a type"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="source">Source</SelectItem>
+                                            <SelectItem value="target">Target</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
                             <div className="grid gap-2">
                                 <Label htmlFor="dialect">Dialect</Label>
                                 <Select
