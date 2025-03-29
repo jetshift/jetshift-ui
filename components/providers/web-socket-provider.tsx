@@ -1,6 +1,7 @@
 "use client";
 
 import React, {createContext, useContext, useEffect, useRef, useCallback} from 'react';
+import {useToast} from "@/hooks/use-toast";
 
 type WebSocketContextType = {
     sendMessage: (message: string | object) => void;
@@ -18,6 +19,7 @@ export const WebSocketProvider = ({children}: { children: React.ReactNode }) => 
     const reconnectAttempts = useRef(0);
     const maxReconnectAttempts = 5;
     const reconnectInterval = 3000;
+    const {toast} = useToast();
 
     const connectWebSocket = useCallback(() => {
         if (!wsUrl || socketRef.current) return;
@@ -36,6 +38,11 @@ export const WebSocketProvider = ({children}: { children: React.ReactNode }) => 
             let data;
             try {
                 data = JSON.parse(event.data);
+                if (data.message === "testws") {
+                    toast({
+                        description: "Successfully connected to WebSocket server.",
+                    })
+                }
             } catch {
                 console.warn('Received non-JSON message');
                 return;

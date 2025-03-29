@@ -19,8 +19,6 @@ import {
 
 import {Button} from "@/components/ui/button"
 import {Zap} from "lucide-react";
-
-// ✅ Import from the WebSocketProvider Context
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 
 export default function AppLayout(
@@ -37,7 +35,7 @@ export default function AppLayout(
     const {sendMessage} = useWebSocket();
 
     const handleSendMessage = () => {
-        sendMessage({type: "greeting", content: "Hello, server!"});
+        sendMessage({message: "testws"});
     };
 
     return (
