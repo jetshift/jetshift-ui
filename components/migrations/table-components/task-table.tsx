@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table"
 import {Button} from "@/components/ui/button"
 import {MigrationTask} from "@/types/migration"
-import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, CheckIcon} from "lucide-react";
+import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon} from "lucide-react";
 import React from "react";
 
 export default function TaskCard(
@@ -16,12 +16,12 @@ export default function TaskCard(
         tasks,
         onMigrate,
         onViewSchema,
-        onStopMigration,
+        onChangeTaskStatus,
     }: {
         tasks: MigrationTask[]
         onMigrate: (task: MigrationTask) => void
         onViewSchema: (task: MigrationTask) => void
-        onStopMigration?: (task: MigrationTask) => void
+        onChangeTaskStatus?: (task: MigrationTask, status: string) => void
     }) {
     return (
         <Table>
@@ -53,8 +53,8 @@ export default function TaskCard(
                             </TableCell>
                             <TableCell>
                                 <div className="flex items-center space-x-2">
-                                    <span>{task.status}</span>
-                                    {task.status === "migrating" && (
+                                    <span>{task.status.charAt(0).toUpperCase() + task.status.slice(1)}</span>
+                                    {task.status === "syncing" && (
                                         <Loader2Icon className="animate-spin w-4 h-4"/>
                                     )}
                                 </div>
@@ -82,28 +82,39 @@ export default function TaskCard(
 
                                 {(() => {
                                     switch (task.status) {
-                                        case "pending":
-                                        case "paused":
+                                        case "idle":
                                             return (
                                                 <Button
                                                     variant="outline"
                                                     size="icon"
-                                                    title="Migrate"
+                                                    title="Run the task"
                                                     onClick={() => onMigrate(task)}
                                                 >
                                                     <RefreshCcwIcon/>
                                                 </Button>
                                             )
 
-                                        case "migrating":
+                                        case "syncing":
                                             return (
                                                 <Button
                                                     variant="destructive"
                                                     size="icon"
                                                     title="Stop"
-                                                    onClick={() => onStopMigration?.(task)}
+                                                    onClick={() => onChangeTaskStatus?.(task, 'paused')}
                                                 >
                                                     <CircleStopIcon/>
+                                                </Button>
+                                            )
+
+                                        case "paused":
+                                            return (
+                                                <Button
+                                                    variant="outline"
+                                                    size="icon"
+                                                    title="Resume"
+                                                    onClick={() => onChangeTaskStatus?.(task, 'syncing')}
+                                                >
+                                                    <PlayIcon/>
                                                 </Button>
                                             )
 
@@ -116,7 +127,7 @@ export default function TaskCard(
                                                     className="bg-green-600 text-white hover:bg-green-700"
                                                     disabled
                                                 >
-                                                    <CheckIcon />
+                                                    <CheckIcon/>
                                                 </Button>
                                             )
 

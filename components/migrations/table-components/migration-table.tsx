@@ -26,7 +26,7 @@ export default function ListMigrationTable(
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
-    const {fetchTables, deleteTable, startMigration, viewSchema} = useMigrationTables();
+    const {fetchTables, deleteTable, viewSchema, startMigration, changeTaskStatus} = useMigrationTables();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
 
@@ -104,7 +104,7 @@ export default function ListMigrationTable(
                             <TableCell>{table.id}</TableCell>
                             <TableCell>{table.title}</TableCell>
                             <TableCell>{table.source_db} ➔ {table.target_db}</TableCell>
-                            <TableCell>{table.status}</TableCell>
+                            <TableCell>{table.status.charAt(0).toUpperCase() + table.status.slice(1)}</TableCell>
                             <TableCell className="flex items-center space-x-2">
                                 <span onClick={() => setSelectedTable(table)} className="cursor-pointer">
                                     <Expand color="green"/>
@@ -137,17 +137,16 @@ export default function ListMigrationTable(
                             setSchemaData(schema)
                             setOpenSchema(true)
                         }}
-                        onStopMigration={async (task) => {
-                            // Optional: handle stopping migration
-                            console.log(task)
-                            // const response = await stopMigration(task.migrate_table_id, task.id)
-                            // toast({
-                            //     variant: response.success ? "default" : "destructive",
-                            //     description: response.message,
-                            // })
+                        onChangeTaskStatus={async (task, status) => {
+                            const response = await changeTaskStatus(task.id, status)
+                            toast({
+                                variant: response.success ? "default" : "destructive",
+                                description: response.message,
+                            })
+                            const updated = await fetchTables(type)
+                            setTables(updated)
                         }}
                     />
-                    {/*</div>*/}
                 </div>
             )}
 

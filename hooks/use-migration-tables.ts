@@ -53,17 +53,6 @@ export const useMigrationTables = () => {
         return await response.json();
     };
 
-    const startMigration = async (migrate_table_id: number, task_id: number) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables/${migrate_table_id}/migrate/?task_id=${task_id}`);
-        if (!response.ok) {
-            toast({
-                variant: "destructive",
-                description: `Failed to start migration`,
-            })
-        }
-        return await response.json();
-    };
-
     const viewSchema = async (migrate_table_id: number, task_id: number) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables/${migrate_table_id}/schema/?task_id=${task_id}`);
         if (!response.ok) {
@@ -76,5 +65,27 @@ export const useMigrationTables = () => {
         return await response.json();
     };
 
-    return {fetchTables, deleteTable, startMigration, viewSchema};
+    const startMigration = async (migrate_table_id: number, task_id: number) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/tables/${migrate_table_id}/sync/?task_id=${task_id}`);
+        if (!response.ok) {
+            toast({
+                variant: "destructive",
+                description: `Failed to start migration`,
+            })
+        }
+        return await response.json();
+    };
+
+    const changeTaskStatus = async (task_id: number, status: string) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tasks/${task_id}/change-task-status/?status=${status}`);
+        if (!response.ok) {
+            toast({
+                variant: "destructive",
+                description: `Failed to stop migration`,
+            })
+        }
+        return await response.json();
+    };
+
+    return {fetchTables, deleteTable, viewSchema, startMigration, changeTaskStatus};
 };
