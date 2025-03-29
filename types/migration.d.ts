@@ -18,6 +18,7 @@ export interface MigrationTask {
         total_source_items: number;
         total_target_items: number;
     };
+    deployment_id: string;
     error: string;
 }
 

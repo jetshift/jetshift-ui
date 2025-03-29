@@ -31,6 +31,7 @@ export const useMigrationTables = () => {
                 status: task.status,
                 config: task.config,
                 stats: task.stats,
+                deployment_id: task.deployment_id,
                 error: task.error,
             })) || [],
             created_at: job.created_at,

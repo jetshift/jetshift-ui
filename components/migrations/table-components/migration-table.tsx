@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Expand, CircleX} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import TaskCard from "@/components/migrations/table-components/task-card";
+import TaskTable from "@/components/migrations/table-components/task-table";
 import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
 import {useMigrationTables} from "@/hooks/use-migration-tables";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
@@ -53,6 +53,7 @@ export default function MigrationTable() {
                                     ...task.stats,
                                     total_source_items: updated.total_source_items,
                                     total_target_items: updated.total_target_items,
+                                    deployment_id: updated.deployment_id,
                                 },
                             };
                         }),
@@ -109,28 +110,33 @@ export default function MigrationTable() {
             {selectedTable && (
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-4">Tasks for {selectedTable.title}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {selectedTable.tasks.map((task) => (
-                            <TaskCard
-                                key={task.id}
-                                task={task}
-                                onMigrate={async () => {
-                                    const response = await startMigration(task.migrate_table_id, task.id);
-                                    toast({
-                                        variant: response.success ? "default" : "destructive",
-                                        description: response.message,
-                                    });
-                                    // const updated = await fetchTables();
-                                    // setTables(updated);
-                                }}
-                                onViewSchema={async () => {
-                                    const schema = await viewSchema(task.migrate_table_id, task.id);
-                                    setSchemaData(schema);
-                                    setOpenSchema(true);
-                                }}
-                            />
-                        ))}
-                    </div>
+                        <TaskTable
+                            tasks={selectedTable.tasks}
+                            onMigrate={async (task) => {
+                                const response = await startMigration(task.migrate_table_id, task.id)
+                                toast({
+                                    variant: response.success ? "default" : "destructive",
+                                    description: response.message,
+                                })
+                                const updated = await fetchTables()
+                                setTables(updated)
+                            }}
+                            onViewSchema={async (task) => {
+                                const schema = await viewSchema(task.migrate_table_id, task.id)
+                                setSchemaData(schema)
+                                setOpenSchema(true)
+                            }}
+                            onStopMigration={async (task) => {
+                                // Optional: handle stopping migration
+                                console.log(task)
+                                // const response = await stopMigration(task.migrate_table_id, task.id)
+                                // toast({
+                                //     variant: response.success ? "default" : "destructive",
+                                //     description: response.message,
+                                // })
+                            }}
+                        />
+                    {/*</div>*/}
                 </div>
             )}
 
