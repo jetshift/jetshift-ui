@@ -17,21 +17,23 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import {Button} from "@/components/ui/button"
+import {Button} from "@/components/ui/button";
 import {Zap} from "lucide-react";
-import {useWebSocket} from "@/components/providers/web-socket-provider";
+
+import {useLayout} from '@/components/providers/layout-provider';
+import {useWebSocket} from '@/components/providers/web-socket-provider';
+
+type AppLayoutProps = {
+    user?: any;
+    children: React.ReactNode;
+};
 
 export default function AppLayout(
     {
+        user,
         children,
-        breadcrumbItems = [],
-        rightSection,
-    }: {
-        children: React.ReactNode;
-        breadcrumbItems?: { label: string; href?: string }[];
-        rightSection?: React.ReactNode;
-    }) {
-    // ✅ Use the context version
+    }: AppLayoutProps) {
+    const {breadcrumbItems, rightSection} = useLayout();
     const {sendMessage} = useWebSocket();
 
     const handleSendMessage = () => {
@@ -40,7 +42,7 @@ export default function AppLayout(
 
     return (
         <SidebarProvider>
-            <AppSidebar/>
+            <AppSidebar user={user}/>
             <SidebarInset>
                 <header className="flex h-16 items-center justify-between px-4 flex-wrap transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     {/* Left Section */}
@@ -75,9 +77,16 @@ export default function AppLayout(
 
                     {/* Right Section */}
                     <div className="flex items-center gap-2 flex-wrap justify-end mt-2 sm:mt-0">
+                        {user && <span className="text-sm text-muted-foreground">Hi, {user.name}</span>}
+
                         {rightSection}
 
-                        <Button variant="outline" size="icon" onClick={handleSendMessage} title={`Test WebSocket`}>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={handleSendMessage}
+                            title={`Test WebSocket`}
+                        >
                             <Zap/>
                         </Button>
                     </div>

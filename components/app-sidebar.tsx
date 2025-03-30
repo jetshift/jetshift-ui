@@ -27,12 +27,6 @@ import Link from 'next/link'
 
 // Data
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/",
-        // avatar: "/avatars/shadcn.jpg",
-    },
     navMain: [
         {
             title: "Databases",
@@ -82,7 +76,11 @@ const data = {
     // ],
 }
 
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+    user?: any;
+};
+
+export function AppSidebar({user, ...props}: AppSidebarProps) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -108,7 +106,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 {/*<NavProjects projects={data.projects}/>*/}
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user}/>
+                {user && <NavUser user={user}/>}
             </SidebarFooter>
             <SidebarRail/>
         </Sidebar>

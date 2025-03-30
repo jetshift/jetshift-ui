@@ -1,69 +1,44 @@
+import api from "@/lib/api";
 import {toast} from "@/hooks/use-toast";
 
+// Fetch the list of databases, optionally filtered by type
 export const fetchDatabaseList = async (type?: string) => {
-    const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/databases/${type ? `?type=${type}` : ""}`
-    );
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch databases");
+    try {
+        const response = await api.get(`/databases/${type ? `?type=${type}` : ""}`);
+        return response.data.data || [];
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            description: `Error fetching database list: ${error?.response?.data?.message || error.message}`,
+        });
+        return [];
     }
-
-    const data = await response.json();
-    return data.data || [];
 };
 
+// Check the connection to a specific database
 export const checkDatabaseConnection = async (id: number) => {
     try {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/databases/${id}/check-connection/`,
-            {method: "GET"}
-        );
+        const response = await api.get(`/databases/${id}/check-connection/`);
 
-        if (response.status === 400) {
-            const data = await response.json();
-            toast({
-                variant: "destructive",
-                description: `${data.message}`,
-            });
-            return;
-        }
-
-        if (!response.ok) {
-            toast({
-                variant: "destructive",
-                description: `Failed to check database connection. Status: ${response.status}`,
-            });
-            return;
-        }
-
-        const data = await response.json();
-
+        const data = response.data;
         if (data.success) {
             toast({description: `${data.message}`});
         } else {
             toast({variant: "destructive", description: `${data.message}`});
         }
-    } catch (error) {
+    } catch (error: any) {
         toast({
             variant: "destructive",
-            description: `Error checking connection for ID ${id}: ${error}`,
+            description: `Error checking connection for database ID ${id}: ${error?.response?.data?.message || error.message}`,
         });
     }
 };
 
+// Delete a database by its ID
 export const deleteDatabaseById = async (id: number, refreshCallback: () => void) => {
     try {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/databases/${id}/`,
-            {method: "DELETE"}
-        );
-
-        if (!response.ok) {
-            throw new Error("Failed to delete database");
-        }
-
-        const data = await response.json();
+        const response = await api.delete(`/databases/${id}/`);
+        const data = response.data;
 
         if (data.success) {
             refreshCallback();
@@ -71,10 +46,10 @@ export const deleteDatabaseById = async (id: number, refreshCallback: () => void
         } else {
             toast({variant: "destructive", description: `${data.message}`});
         }
-    } catch (error) {
+    } catch (error: any) {
         toast({
             variant: "destructive",
-            description: `Error deleting database ID ${id}: ${error}`,
+            description: `Error deleting database ID ${id}: ${error?.response?.data?.message || error.message}`,
         });
     }
 };
