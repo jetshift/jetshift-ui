@@ -20,6 +20,8 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {Loader} from "lucide-react";
+import {useRouter} from 'next/navigation';
+import {createDatabase} from "@/services/database-service";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
     type?: string;
@@ -32,10 +34,11 @@ export default function AddDatabase(
         ...props
     }: AddDatabaseProps) {
 
+    const router = useRouter();
     const {toast} = useToast()
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
-        type: "",
+        type: "source",
         dialect: "",
         title: "",
         host: "",
@@ -57,55 +60,24 @@ export default function AddDatabase(
         e.preventDefault();
         setIsLoading(true);
 
-        // Validate required fields
         if (!formData.host || !formData.password) {
             toast({
                 variant: "destructive",
                 description: "Host and password are required.",
-            })
+            });
+            setIsLoading(false);
             return;
         }
 
-        formData.type = type ?? '';
+        const success = await createDatabase(formData);
 
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/databases/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    toast({
-                        description: data.message,
-                    })
-                    // setFormData({host: "", password: ""});
-                } else {
-                    toast({
-                        variant: "destructive",
-                        description: data.message,
-                    })
-                }
-            } else {
-                const errorData = await response.json();
-
-                toast({
-                    variant: "destructive",
-                    description: `${errorData.message}`,
-                })
-            }
-        } catch (error) {
-            toast({
-                variant: "destructive",
-                description: `${error}`,
-            })
-        } finally {
-            setIsLoading(false);
+        if (success) {
+            setTimeout(() => {
+                router.push('/databases');
+            }, 1500);
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -121,12 +93,17 @@ export default function AddDatabase(
                         <div className="grid grid-cols-1 gap-6 mb-6">
 
                             <div className="grid gap-2">
-                                <Label htmlFor="dialect">Type</Label>
+                                <Label htmlFor="type">Type</Label>
                                 <Select
-                                    name="type"
-                                    defaultValue="source"
+                                    value={formData.type}
+                                    onValueChange={(value) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            type: value,
+                                        }))
+                                    }
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger id="type">
                                         <SelectValue placeholder="Select a type"/>
                                     </SelectTrigger>
                                     <SelectContent>

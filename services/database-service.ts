@@ -1,6 +1,32 @@
 import api from "@/lib/api";
 import {toast} from "@/hooks/use-toast";
 
+// Create a new database entry
+export const createDatabase = async (formData: any): Promise<boolean> => {
+    try {
+        const response = await api.post("/databases/", formData);
+        const data = response.data;
+
+        if (data.success) {
+            toast({description: data.message});
+            return true;
+        } else {
+            toast({
+                variant: "destructive",
+                description: data.message,
+            });
+            return false;
+        }
+    } catch (error: any) {
+        const message = error?.response?.data?.message || error.message;
+        toast({
+            variant: "destructive",
+            description: `Database creation failed: ${message}`,
+        });
+        return false;
+    }
+};
+
 // Fetch the list of databases, optionally filtered by type
 export const fetchDatabaseList = async (type?: string) => {
     try {

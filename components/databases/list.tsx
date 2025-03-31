@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import {cn} from "@/lib/utils";
-import {Router, Loader, CircleX, XIcon, Expand} from "lucide-react";
+import {Router, Loader, XIcon} from "lucide-react";
 import {
     Table,
     TableBody,
@@ -10,9 +10,25 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {useToast} from "@/hooks/use-toast"
-import {fetchDatabaseList, checkDatabaseConnection, deleteDatabaseById} from "@/services/database-service";
 import {Button} from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import {useToast} from "@/hooks/use-toast";
+import {
+    fetchDatabaseList,
+    checkDatabaseConnection,
+    deleteDatabaseById,
+} from "@/services/database-service";
 
 interface Database {
     id: number;
@@ -38,8 +54,7 @@ export default function ListDatabase(
         type,
         ...props
     }: ListDatabaseProps) {
-
-    const {toast} = useToast()
+    const {toast} = useToast();
     const [databases, setDatabases] = useState<Database[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const isFetchedDatabases = useRef(false);
@@ -121,19 +136,37 @@ export default function ListDatabase(
                                     title={isCheckingConnection === db.id ? "Checking connection..." : "Check connection"}
                                     onClick={() => handleCheckConnection(db.id)}
                                 >
-                                    {isCheckingConnection === db.id ? <Loader/> : <Router/>}
+                                    {isCheckingConnection === db.id ? <Loader className="animate-spin"/> : <Router/>}
                                 </Button>
 
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    title="Delete"
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-300"
-                                    onClick={() => handleDeleteDatabase(db.id)}
-                                >
-                                    {isDeletingDatabase === db.id ? <Loader/> : <XIcon/>}
-                                </Button>
-
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="text-red-600 hover:text-red-700 hover:bg-red-300"
+                                        >
+                                            <XIcon/>
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This will permanently delete <strong>{db.title}</strong>. This action cannot be undone.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={() => handleDeleteDatabase(db.id)}
+                                                className="bg-red-600 hover:bg-red-700"
+                                            >
+                                                {isDeletingDatabase === db.id ? <Loader className="animate-spin"/> : "Confirm Delete"}
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </TableCell>
                         </TableRow>
                     ))}
