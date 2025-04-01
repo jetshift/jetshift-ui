@@ -29,8 +29,7 @@ export async function middleware(request: NextRequest) {
                     httpOnly: true,
                     secure: process.env.APP_ENV === 'production',
                     path: '/',
-                    maxAge: 60 * 60 * 24, // 1 day
-                    // maxAge: 60 // testing
+                    maxAge: 60 * 30, // 30 minutes
                 })
 
                 return response
