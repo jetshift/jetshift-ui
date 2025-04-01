@@ -1,16 +1,46 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import {NextResponse} from 'next/server'
+import type {NextRequest} from 'next/server'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const token = request.cookies.get('auth_token')?.value
-    const { pathname } = request.nextUrl
+    const refreshToken = request.cookies.get('refresh_token')?.value
+    const {pathname} = request.nextUrl
 
-    // Don't protect the login route
+    // Allow public paths
     if (pathname.startsWith('/login') || pathname.startsWith('/_next')) {
         return NextResponse.next()
     }
 
-    // Protect everything else
+    // If no token but refresh token exists, attempt refresh
+    if (!token && refreshToken) {
+        try {
+            const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/token/refresh/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({refresh: refreshToken}),
+            })
+
+            if (refreshRes.ok) {
+                const data = await refreshRes.json()
+                const response = NextResponse.next()
+                response.cookies.set('auth_token', data.access, {
+                    httpOnly: true,
+                    secure: process.env.APP_ENV === 'production',
+                    path: '/',
+                    maxAge: 60 * 60 * 24, // 1 day
+                    // maxAge: 60 // testing
+                })
+
+                return response
+            }
+        } catch (err) {
+            console.error('Token refresh failed:', err)
+        }
+    }
+
+    // If no valid tokens, redirect to login
     if (!token) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
@@ -18,6 +48,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
 }
 
+// Match all routes except API, _next, favicon
 export const config = {
-    matcher: ['/((?!api|_next|favicon.ico).*)'], // Match all routes except API, _next, favicon
+    matcher: ['/((?!api|_next|public|favicon.ico).*)'],
 }
