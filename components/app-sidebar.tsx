@@ -11,7 +11,6 @@ import {
 import {NavMain} from "@/components/nav-main"
 // import {NavProjects} from "@/components/nav-projects"
 import {NavUser} from "@/components/nav-user"
-// import {TeamSwitcher} from "@/components/team-switcher"
 import {NavJetShift} from "@/components/nav-jetshift";
 import {
     SidebarGroup,

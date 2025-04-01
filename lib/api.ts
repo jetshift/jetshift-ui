@@ -1,15 +1,16 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`, // Django API URL
+    baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
+    withCredentials: true,
 })
 
 // Add access token to every request
 api.interceptors.request.use(config => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    }
+    // const token = typeof window !== 'undefined' ? localStorage.getItem('access') : null
+    // if (token) {
+    //     config.headers.Authorization = `Bearer ${token}`
+    // }
     return config
 })
 

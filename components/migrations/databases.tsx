@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import {useToast} from "@/hooks/use-toast"
 import {Button} from "@/components/ui/button";
+import api from "@/lib/api";
 
 interface MigrateDatabase {
     id: number;
@@ -40,13 +41,9 @@ export default function ListMigrationDatabase(
 
     const fetchDatabases = async () => {
         try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/migrate/databases`
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch databases");
-            }
-            const data = await response.json();
+            const response = await api.get(`/migrate/databases/`);
+
+            const data = response.data;
             setDatabases(data.data || []);
         } catch (error) {
             toast({

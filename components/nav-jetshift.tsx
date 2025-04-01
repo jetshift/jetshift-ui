@@ -30,7 +30,7 @@ export function NavJetShift() {
                     <span className="truncate font-semibold">
                       JetShift
                     </span>
-                        <span className="truncate text-xs">jetshift@obydu.me</span>
+                        <span className="truncate text-xs">jetshift@obydul.me</span>
                     </div>
                 </SidebarMenuButton>
             </SidebarMenuItem>

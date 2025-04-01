@@ -3,7 +3,7 @@ import {Expand, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import TaskTable from "@/components/migrations/table-components/task-table";
 import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
-import {useMigrationTables} from "@/hooks/use-migration-tables";
+import {tableService} from "@/services/table-service";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
 import {useToast} from "@/hooks/use-toast";
@@ -27,7 +27,7 @@ export default function ListMigrationTable(
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
-    const {fetchTables, deleteTable, viewSchema, startMigration, changeTaskStatus} = useMigrationTables();
+    const {fetchTables, deleteTable, viewSchema, startMigration, changeTaskStatus} = tableService();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
 
