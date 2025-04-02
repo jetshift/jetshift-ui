@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import {cn} from "@/lib/utils";
-import {Router, Loader, XIcon} from "lucide-react";
+import {Router, Loader, XIcon, PencilIcon} from "lucide-react";
 import {
     Table,
     TableBody,
@@ -22,6 +22,7 @@ import {
     AlertDialogDescription,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Link from "next/link";
 
 import {useToast} from "@/hooks/use-toast";
 import {
@@ -107,6 +108,7 @@ export default function ListDatabase(
                     <TableRow>
                         <TableHead className="w-[100px]">ID</TableHead>
                         <TableHead>Title</TableHead>
+                        <TableHead>Type</TableHead>
                         <TableHead>Dialect</TableHead>
                         <TableHead>Host</TableHead>
                         <TableHead>Port</TableHead>
@@ -122,6 +124,7 @@ export default function ListDatabase(
                         <TableRow key={db.id}>
                             <TableCell className="font-medium">{db.id}</TableCell>
                             <TableCell>{db.title}</TableCell>
+                            <TableCell>{db.type}</TableCell>
                             <TableCell>{db.dialect}</TableCell>
                             <TableCell>{db.host}</TableCell>
                             <TableCell>{db.port}</TableCell>
@@ -138,6 +141,11 @@ export default function ListDatabase(
                                 >
                                     {isCheckingConnection === db.id ? <Loader className="animate-spin"/> : <Router/>}
                                 </Button>
+                                <Link href={`/databases/${db.id}/edit`}>
+                                    <Button variant="outline" size="icon" title="Edit">
+                                        <PencilIcon/>
+                                    </Button>
+                                </Link>
 
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
@@ -161,6 +169,7 @@ export default function ListDatabase(
                                             <AlertDialogAction
                                                 onClick={() => handleDeleteDatabase(db.id)}
                                                 className="bg-red-600 hover:bg-red-700"
+                                                title={`Delete`}
                                             >
                                                 {isDeletingDatabase === db.id ? <Loader className="animate-spin"/> : "Confirm Delete"}
                                             </AlertDialogAction>

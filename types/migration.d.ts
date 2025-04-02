@@ -1,3 +1,26 @@
+interface DatabaseFormData {
+    id?: number;
+    type: string;
+    dialect: string;
+    title: string;
+    host: string;
+    port: string;
+    username: string;
+    password: string;
+    database: string;
+}
+
+interface MigrateDatabase {
+    id?: number;
+    title: string;
+    source_db: string;
+    target_db: string;
+    status: boolean;
+    logs: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface MigrationTask {
     id: number;
     migrate_table_id: number;

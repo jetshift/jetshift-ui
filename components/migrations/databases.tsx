@@ -13,17 +13,7 @@ import {
 import {useToast} from "@/hooks/use-toast"
 import {Button} from "@/components/ui/button";
 import api from "@/lib/api";
-
-interface MigrateDatabase {
-    id: number;
-    title: string;
-    source_db: string;
-    target_db: string;
-    status: boolean;
-    logs: string;
-    created_at: string;
-    updated_at: string;
-}
+import {MigrateDatabase} from "@/types/migration";
 
 type ListDatabaseProps = React.ComponentPropsWithoutRef<"div">
 

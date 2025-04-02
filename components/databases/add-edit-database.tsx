@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {useToast} from "@/hooks/use-toast"
+import {useToast} from "@/hooks/use-toast";
 import {
     Select,
     SelectContent,
@@ -18,37 +18,43 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {Loader} from "lucide-react";
 import {useRouter} from 'next/navigation';
-import {createDatabase} from "@/services/database-service";
+import {createDatabase, updateDatabase} from "@/services/database-service";
+import {DatabaseFormData} from "@/types/migration";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
-    type?: string;
+    initialData?: Partial<DatabaseFormData>;
+    isEdit?: boolean;
 };
 
-export default function AddDatabase(
+export default function AddEditDatabase(
     {
         className,
-        type,
+        initialData = {},
+        isEdit = false,
         ...props
     }: AddDatabaseProps) {
 
     const router = useRouter();
-    const {toast} = useToast()
+    const {toast} = useToast();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        type: "source",
-        dialect: "",
-        title: "",
-        host: "",
-        port: "",
-        username: "",
-        password: "",
-        database: "",
+    const [formData, setFormData] = useState<DatabaseFormData>({
+        id: initialData.id || "",
+        type: initialData.type || "source",
+        dialect: initialData.dialect || "",
+        title: initialData.title || "",
+        host: initialData.host || "",
+        port: initialData.port || "",
+        username: initialData.username || "",
+        password: initialData.password || "",
+        database: initialData.database || "",
     });
 
-    const handleInputEvent = (e: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
+    const handleInputEvent = (
+        e: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>
+    ) => {
         const {name, value} = e.target as HTMLInputElement;
         setFormData((prev) => ({
             ...prev,
@@ -69,7 +75,9 @@ export default function AddDatabase(
             return;
         }
 
-        const success = await createDatabase(formData);
+        const success = isEdit
+            ? await updateDatabase(formData)
+            : await createDatabase(formData);
 
         if (success) {
             setTimeout(() => {
@@ -84,14 +92,24 @@ export default function AddDatabase(
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className="text-xl">Add Database</CardTitle>
-                    <CardDescription>Provide your database details</CardDescription>
+                    <CardTitle className="text-xl">
+                        {isEdit ? "Edit Database" : "Add Database"}
+                    </CardTitle>
+                    <CardDescription>
+                        {isEdit ? "Update your database connection" : "Provide your database details"}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
+                        {isEdit && (
+                            <input
+                                type="hidden"
+                                name="id"
+                                value={formData.id}
+                            />
+                        )}
 
                         <div className="grid grid-cols-1 gap-6 mb-6">
-
                             <div className="grid gap-2">
                                 <Label htmlFor="type">Type</Label>
                                 <Select
@@ -118,13 +136,13 @@ export default function AddDatabase(
                             <div className="grid gap-2">
                                 <Label htmlFor="dialect">Dialect</Label>
                                 <Select
+                                    value={formData.dialect}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({
                                             ...prev,
                                             dialect: value,
                                         }))
                                     }
-                                    name="dialect"
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select a dialect"/>
@@ -134,6 +152,7 @@ export default function AddDatabase(
                                             <SelectItem value="sqlite">SQLite</SelectItem>
                                             <SelectItem value="mysql">MySQL</SelectItem>
                                             <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                                            <SelectItem value="clickhouse">ClickHouse</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -144,10 +163,7 @@ export default function AddDatabase(
                         </div>
 
                         <div className="grid grid-cols-2 gap-6">
-
-                            {/* Left columns */}
                             <div className="grid gap-6">
-
                                 <div className="grid gap-2">
                                     <Label htmlFor="title">Title</Label>
                                     <Input
@@ -189,10 +205,9 @@ export default function AddDatabase(
                                 </div>
                             </div>
 
-                            {/* Right columns */}
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="username">Username</Label>
+                                    <Label htmlFor="username">User</Label>
                                     <Input
                                         id="username"
                                         type="text"
@@ -212,7 +227,7 @@ export default function AddDatabase(
                                         name="password"
                                         value={formData.password}
                                         onChange={handleInputEvent}
-                                        onPaste={handleInputEvent} // Handle paste events
+                                        onPaste={handleInputEvent}
                                         required
                                     />
                                 </div>
@@ -231,8 +246,9 @@ export default function AddDatabase(
                                 </div>
                             </div>
                         </div>
+
                         <Button type="submit" className="w-full mt-6">
-                            {isLoading ? <Loader/> : "Add"}
+                            {isLoading ? <Loader/> : isEdit ? "Update" : "Add"}
                         </Button>
                     </form>
                 </CardContent>

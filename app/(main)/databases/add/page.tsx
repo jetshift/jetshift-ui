@@ -2,9 +2,9 @@
 
 import {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
-import AddDatabase from "@/components/databases/add-database";
+import AddEditDatabase from "@/components/databases/add-edit-database";
 
-export default function About() {
+export default function AddDatabasePage() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
 
     useEffect(() => {
@@ -21,8 +21,7 @@ export default function About() {
         <>
             <div className="flex flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
                 <div className="flex w-full max-w-lg flex-col gap-6">
-                    {/*<AddDatabase type="target"/>*/}
-                    <AddDatabase/>
+                    <AddEditDatabase/>
                 </div>
             </div>
         </>
