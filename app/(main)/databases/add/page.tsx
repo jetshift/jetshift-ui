@@ -2,7 +2,7 @@
 
 import {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
-import AddEditDatabase from "@/components/databases/add-edit-database";
+import AddEditDatabaseComponent from "@/components/databases/add-edit-database";
 
 export default function AddDatabasePage() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
@@ -21,7 +21,7 @@ export default function AddDatabasePage() {
         <>
             <div className="flex flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
                 <div className="flex w-full max-w-lg flex-col gap-6">
-                    <AddEditDatabase/>
+                    <AddEditDatabaseComponent/>
                 </div>
             </div>
         </>

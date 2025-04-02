@@ -3,7 +3,7 @@ import {Expand, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import TaskTable from "@/components/migrations/table-components/task-table";
 import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
-import {tableService} from "@/services/table-service";
+import {tableService} from "@/lib/services/table-service";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {MigrateTable} from "@/types/migration";
 import {useToast} from "@/hooks/use-toast";

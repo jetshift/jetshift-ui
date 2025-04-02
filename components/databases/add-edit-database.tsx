@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import {Loader} from "lucide-react";
 import {useRouter} from 'next/navigation';
-import {createDatabase, updateDatabase} from "@/services/database-service";
+import {createDatabase, updateDatabase} from "@/lib/services/database-service";
 import {DatabaseFormData} from "@/types/migration";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
@@ -29,7 +29,7 @@ type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
     isEdit?: boolean;
 };
 
-export default function AddEditDatabase(
+export default function AddEditDatabaseComponent(
     {
         className,
         initialData = {},
@@ -41,12 +41,12 @@ export default function AddEditDatabase(
     const {toast} = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<DatabaseFormData>({
-        id: initialData.id || "",
+        id: initialData.id || undefined,
         type: initialData.type || "source",
         dialect: initialData.dialect || "",
         title: initialData.title || "",
         host: initialData.host || "",
-        port: initialData.port || "",
+        port: initialData.port || 3306,
         username: initialData.username || "",
         password: initialData.password || "",
         database: initialData.database || "",

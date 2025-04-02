@@ -4,7 +4,7 @@ interface DatabaseFormData {
     dialect: string;
     title: string;
     host: string;
-    port: string;
+    port: number;
     username: string;
     password: string;
     database: string;

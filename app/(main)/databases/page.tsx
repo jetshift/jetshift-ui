@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button"
-import ListDatabase from "@/components/databases/list";
+import ListDatabaseComponent from "@/components/databases/list";
 
 export default function About() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
@@ -23,10 +23,8 @@ export default function About() {
     return (
         <>
             <div>
-                {/*<ListDatabase className="mt-2" type="source" />*/}
-                <ListDatabase className="mt-2" />
+                <ListDatabaseComponent className="mt-2" />
             </div>
-
         </>
     );
 }

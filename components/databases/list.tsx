@@ -29,7 +29,7 @@ import {
     fetchDatabaseList,
     checkDatabaseConnection,
     deleteDatabaseById,
-} from "@/services/database-service";
+} from "@/lib/services/database-service";
 
 interface Database {
     id: number;
@@ -49,7 +49,7 @@ interface ListDatabaseProps extends React.ComponentPropsWithoutRef<"div"> {
     type?: string;
 }
 
-export default function ListDatabase(
+export default function ListDatabaseComponent(
     {
         className,
         type,
