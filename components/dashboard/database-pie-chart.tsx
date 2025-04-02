@@ -14,7 +14,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import {fetchETLTaskChart} from "@/lib/api/charts"
+import {fetchDatabaseChart} from "@/lib/api/charts"
 
 type ChartDatum = {
     status: string
@@ -22,27 +22,23 @@ type ChartDatum = {
     fill: string
 }
 
-type EtlPieChartProps = {
+type ChartProps = {
     title?: string,
     type?: string
 }
 
-export function EtlPieChart({title, type}: EtlPieChartProps) {
+export function DatabasePieChart({title}: ChartProps) {
     const [chartData, setChartData] = useState<ChartDatum[]>([])
     const [chartConfig, setChartConfig] = useState<ChartConfig>({})
 
     useEffect(() => {
         const loadChart = async () => {
             try {
-                const response = await fetchETLTaskChart(type)
+                const response = await fetchDatabaseChart()
 
                 const knownColors: Record<string, string> = {
-                    Idle: "#a8a29e",        // gray-400 → inactive
-                    Syncing: "#2db4a4",     // teal → in progress
-                    Paused: "#fbbf24",      // amber → paused/waiting
-                    Failed: "#ef4444",      // red → failed/error
-                    Pending: "#64748b",     // slate → waiting to run
-                    Completed: "#22c55e",   // green-500 → success ✅
+                    Source: "#e66b4d",
+                    Target: "#2db4a4",
                 }
 
                 const fallbackPalette = [
@@ -54,9 +50,9 @@ export function EtlPieChart({title, type}: EtlPieChartProps) {
                 ]
 
                 const dynamicData: ChartDatum[] = response.map((item, index) => {
-                    const knownColor = knownColors[item.status]
+                    const knownColor = knownColors[item.type]
                     return {
-                        status: item.status,
+                        type: item.type,
                         total: item.count,
                         fill: knownColor || fallbackPalette[index % fallbackPalette.length],
                     }
@@ -67,9 +63,9 @@ export function EtlPieChart({title, type}: EtlPieChartProps) {
                 }
 
                 response.forEach((item, index) => {
-                    const knownColor = knownColors[item.status]
-                    config[item.status.toLowerCase()] = {
-                        label: item.status,
+                    const knownColor = knownColors[item.type]
+                    config[item.type.toLowerCase()] = {
+                        label: item.type,
                         color: knownColor || fallbackPalette[index % fallbackPalette.length],
                     }
                 })
@@ -100,7 +96,7 @@ export function EtlPieChart({title, type}: EtlPieChartProps) {
                             data={chartData}
                             dataKey="total"
                             label
-                            nameKey="status"
+                            nameKey="type"
                         />
                     </PieChart>
                 </ChartContainer>
