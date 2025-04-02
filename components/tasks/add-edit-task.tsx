@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {Loader} from "lucide-react";
 import {useRouter} from 'next/navigation';
 import {MigrateTable} from "@/types/migration";
 import {taskService} from "@/lib/services/task-service";
+import {fetchDatabaseList} from "@/lib/services/database-service";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
     type?: string;
@@ -52,6 +53,8 @@ export default function AddEditTaskComponent(
         logs: initialData.logs || "",
     });
     const {createTask, updateTask} = taskService();
+    const isFetchedDatabases = useRef(false);
+    const [databases, setDatabases] = useState([]);
 
     const handleInputEvent = (
         e: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>
@@ -62,6 +65,25 @@ export default function AddEditTaskComponent(
             [name]: value,
         }));
     };
+
+    const fetchDatabases = async () => {
+        try {
+            const data = await fetchDatabaseList();
+            setDatabases(data);
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                description: `Error fetching databases: ${error}`,
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (!isFetchedDatabases.current) {
+            isFetchedDatabases.current = true;
+            fetchDatabases();
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -150,10 +172,11 @@ export default function AddEditTaskComponent(
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            <SelectItem value="1">SQLite</SelectItem>
-                                            <SelectItem value="2">MySQL</SelectItem>
-                                            <SelectItem value="3">PostgreSQL</SelectItem>
-                                            <SelectItem value="4">ClickHouse</SelectItem>
+                                            {databases.map((db: any) => (
+                                                <SelectItem key={db.id} value={db.id.toString()}>
+                                                    {db.title} ({db.dialect})
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -180,10 +203,11 @@ export default function AddEditTaskComponent(
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            <SelectItem value="1">SQLite</SelectItem>
-                                            <SelectItem value="2">MySQL</SelectItem>
-                                            <SelectItem value="3">PostgreSQL</SelectItem>
-                                            <SelectItem value="4">ClickHouse</SelectItem>
+                                            {databases.map((db: any) => (
+                                                <SelectItem key={db.id} value={db.id.toString()}>
+                                                    {db.title} ({db.dialect})
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
