@@ -17,8 +17,21 @@ interface MigrateDatabase {
     target_db: string;
     status: boolean;
     logs: string;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface MigrateTable {
+    id?: number;
+    type?: string;
+    title: string;
+    source_db: string;
+    target_db: string;
+    status: string;
+    logs: string;
+    tasks?: MigrationTask[];
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface MigrationTask {
@@ -43,16 +56,4 @@ export interface MigrationTask {
     };
     deployment_id: string;
     error: string;
-}
-
-export interface MigrateTable {
-    id: number;
-    title: string;
-    source_db: string;
-    target_db: string;
-    status: string;
-    logs: string;
-    tasks: MigrationTask[];
-    created_at: string;
-    updated_at: string;
 }

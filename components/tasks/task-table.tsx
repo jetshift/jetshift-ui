@@ -11,7 +11,7 @@ import {MigrationTask} from "@/types/migration"
 import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon} from "lucide-react";
 import React from "react";
 
-export default function TaskCard(
+export default function TaskTable(
     {
         tasks,
         onMigrate,

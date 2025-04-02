@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button"
-import ListTable from "@/components/migrations/table-components/migration-table";
+import ListTable from "@/components/tasks/list";
 import React, {useEffect} from "react";
 import {useLayout} from "@/components/providers/layout-provider";
 

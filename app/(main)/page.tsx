@@ -19,12 +19,10 @@ export default function DashboardPage() {
     return (
         <>
             <div className="grid auto-rows-min gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-
                 <EtlPieChart title="Migration Tasks" type="migration"/>
 
                 <EtlPieChart title="ETL Tasks" type="etl"/>
 
-                <div className="aspect-video rounded-xl bg-muted/50"/>
                 <div className="aspect-video rounded-xl bg-muted/50"/>
             </div>
             <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"/>

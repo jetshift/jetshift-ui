@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
 import {buttonVariants} from "@/components/ui/button"
 import Link from "next/link";
-import ListTable from "@/components/migrations/table-components/migration-table";
+import ListTable from "@/components/tasks/list";
 
 export default function About() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
@@ -16,7 +16,7 @@ export default function About() {
         ]);
 
         setRightSection(
-            <Link className={buttonVariants({variant: "outline"})} href={"/migrations/tables/add"}>Add Task</Link>
+            <Link className={buttonVariants({variant: "outline"})} href={"/etl-tasks/add"}>Add Task</Link>
         );
     }, [setBreadcrumbItems, setRightSection]);
 

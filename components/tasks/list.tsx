@@ -1,14 +1,26 @@
 import React, {useEffect, useState} from "react";
 import {Expand, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import TaskTable from "@/components/migrations/table-components/task-table";
-import SchemaViewer from "@/components/migrations/table-components/schema-viewer";
-import {tableService} from "@/lib/services/table-service";
+import TaskTable from "@/components/tasks/task-table";
+import SchemaViewer from "@/components/tasks/schema-viewer";
+import {taskService} from "@/lib/services/task-service";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
-import {MigrateTable} from "@/types/migration";
 import {useToast} from "@/hooks/use-toast";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import {MigrateTable} from "@/types/migration";
+
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
     type?: string;
@@ -27,22 +39,29 @@ export default function ListTable(
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
-    const {fetchTables, deleteTable, viewSchema, startMigration, changeTaskStatus} = tableService();
+    const {fetchTasks, deleteTaskById, viewSchema, startMigration, changeTaskStatus} = taskService();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
 
     useEffect(() => {
-        (async () => {
-            try {
-                const data = await fetchTables(type);
-                setTables(data);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setLoading(false);
-            }
-        })();
+        loadTables();
     }, [type]);
+
+    const loadTables = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchTasks(type);
+            setTables(data);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteTable = async (id: number) => {
+        await deleteTaskById(id, () => loadTables());
+    };
 
     // Listen WebSocket and update tasks in tables
     useEffect(() => {
@@ -113,18 +132,38 @@ export default function ListTable(
                                     title="View Tasks"
                                     onClick={() => setSelectedTable(prev => prev?.id === table.id ? null : table)}
                                 >
-                                    <Expand/>
+                                    <Expand />
                                 </Button>
 
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    title="Delete"
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-300"
-                                    onClick={() => deleteTable(table.id)}
-                                >
-                                    <XIcon/>
-                                </Button>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            title="Delete"
+                                            className="text-red-600 hover:text-red-700 hover:bg-red-300"
+                                        >
+                                            <XIcon />
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This will permanently delete the task <strong>{table.title}</strong> and cannot be undone.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={() => deleteTable(table.id)}
+                                                className="bg-red-600 hover:bg-red-700 text-white"
+                                            >
+                                                Delete
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -143,7 +182,7 @@ export default function ListTable(
                                 variant: response.success ? "default" : "destructive",
                                 description: response.message,
                             })
-                            const updated = await fetchTables(type)
+                            const updated = await fetchTasks(type)
                             setTables(updated)
                         }}
                         onViewSchema={async (task) => {
@@ -157,7 +196,7 @@ export default function ListTable(
                                 variant: response.success ? "default" : "destructive",
                                 description: response.message,
                             })
-                            const updated = await fetchTables(type)
+                            const updated = await fetchTasks(type)
                             setTables(updated)
                         }}
                     />
