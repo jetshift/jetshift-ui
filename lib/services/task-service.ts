@@ -1,4 +1,4 @@
-import {MigrateTable} from "@/types/migration";
+import {TaskInterface} from "@/types/migration";
 import api from "@/lib/api";
 import {toast} from "@/hooks/use-toast";
 
@@ -9,16 +9,16 @@ export const taskService = () => {
             const response = await api.get(`/tasks${type ? `?type=${type}` : ""}`);
             const data = response.data;
 
-            const mappedData: MigrateTable[] = data.data.map((job: any) => ({
+            const mappedData: TaskInterface[] = data.data.map((job: any) => ({
                 id: job.id,
                 title: job.title,
                 source_db: job.source_database?.title || '',
                 target_db: job.target_database?.title || '',
                 status: job.status,
                 logs: job.logs,
-                tasks: job.tasks?.map((task: any) => ({
+                subtasks: job.subtasks?.map((task: any) => ({
                     id: task.id,
-                    migrate_table_id: task.migrate_table,
+                    task: task.task,
                     source_table: task.source_table,
                     target_table: task.target_table,
                     status: task.status,

@@ -13,7 +13,7 @@ import {
 import {useToast} from "@/hooks/use-toast"
 import {Button} from "@/components/ui/button";
 import api from "@/lib/api";
-import {MigrateDatabase} from "@/types/migration";
+import {MigrateDatabaseInterface} from "@/types/migration";
 
 type ListDatabaseProps = React.ComponentPropsWithoutRef<"div">
 
@@ -24,7 +24,7 @@ export default function ListMigrationDatabase(
     }: ListDatabaseProps) {
 
     const {toast} = useToast()
-    const [databases, setDatabases] = useState<MigrateDatabase[]>([]);
+    const [databases, setDatabases] = useState<MigrateDatabaseInterface[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const isFetchedDatabases = useRef(false);
     const [isDeletingDatabase, setDeletingDatabase] = useState<number | null>(null);
@@ -47,30 +47,7 @@ export default function ListMigrationDatabase(
 
     const deleteDatabase = async (id: number) => {
         try {
-            setDeletingDatabase(id);
-
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/databases/delete/${id}`,
-                {
-                    method: "POST",
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Failed to delete database");
-            }
-            const data = await response.json();
-
-            if (data.success) {
-                fetchDatabases();
-                toast({
-                    description: `${data.message}`,
-                })
-            } else {
-                toast({
-                    variant: "destructive",
-                    description: `${data.message}`,
-                })
-            }
+            //
         } catch (error) {
             toast({
                 variant: "destructive",

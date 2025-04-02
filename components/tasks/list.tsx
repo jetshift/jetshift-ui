@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Expand, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import TaskTable from "@/components/tasks/task-table";
@@ -19,7 +19,7 @@ import {
     AlertDialogCancel,
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import {MigrateTable} from "@/types/migration";
+import {TaskInterface} from "@/types/migration";
 
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -33,18 +33,22 @@ export default function ListTable(
         ...props
     }: ListMigrationTableProps) {
 
-    const [tables, setTables] = useState<MigrateTable[]>([]);
+    const [tables, setTables] = useState<TaskInterface[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedTable, setSelectedTable] = useState<MigrateTable | null>(null);
+    const [selectedTable, setSelectedTable] = useState<TaskInterface | null>(null);
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
+    const isFetchedTasks = useRef(false);
     const {fetchTasks, deleteTaskById, viewSchema, startMigration, changeTaskStatus} = taskService();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
 
     useEffect(() => {
-        loadTables();
+        if (!isFetchedTasks.current) {
+            isFetchedTasks.current = true;
+            loadTables();
+        }
     }, [type]);
 
     const loadTables = async () => {
@@ -74,7 +78,7 @@ export default function ListTable(
 
                     return {
                         ...table,
-                        tasks: table.tasks.map((task) => {
+                        subtasks: table.subtasks.map((task) => {
                             if (task.id !== updated.task_id) return task;
 
                             return {
@@ -132,7 +136,7 @@ export default function ListTable(
                                     title="View Tasks"
                                     onClick={() => setSelectedTable(prev => prev?.id === table.id ? null : table)}
                                 >
-                                    <Expand />
+                                    <Expand/>
                                 </Button>
 
                                 <AlertDialog>
@@ -143,7 +147,7 @@ export default function ListTable(
                                             title="Delete"
                                             className="text-red-600 hover:text-red-700 hover:bg-red-300"
                                         >
-                                            <XIcon />
+                                            <XIcon/>
                                         </Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
@@ -170,14 +174,14 @@ export default function ListTable(
                 </TableBody>
             </Table>
 
-            {/* Task details */}
+            {/* Sub tasks */}
             {selectedTable && (
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-4">Tasks for {selectedTable.title}</h2>
                     <TaskTable
-                        tasks={selectedTable.tasks}
+                        subtasks={selectedTable.subtasks}
                         onMigrate={async (task) => {
-                            const response = await startMigration(task.migrate_table_id, task.id)
+                            const response = await startMigration(task.task, task.id)
                             toast({
                                 variant: response.success ? "default" : "destructive",
                                 description: response.message,
@@ -186,7 +190,7 @@ export default function ListTable(
                             setTables(updated)
                         }}
                         onViewSchema={async (task) => {
-                            const schema = await viewSchema(task.migrate_table_id, task.id)
+                            const schema = await viewSchema(task.task, task.id)
                             setSchemaData(schema)
                             setOpenSchema(true)
                         }}

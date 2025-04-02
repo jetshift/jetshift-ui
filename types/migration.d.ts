@@ -1,4 +1,4 @@
-interface DatabaseFormData {
+interface DatabaseInterface {
     id?: number;
     type: string;
     dialect: string;
@@ -10,7 +10,7 @@ interface DatabaseFormData {
     database: string;
 }
 
-interface MigrateDatabase {
+interface MigrateDatabaseInterface {
     id?: number;
     title: string;
     source_db: string;
@@ -21,7 +21,7 @@ interface MigrateDatabase {
     updated_at?: string;
 }
 
-export interface MigrateTable {
+export interface TaskInterface {
     id?: number;
     type?: string;
     title: string;
@@ -29,14 +29,14 @@ export interface MigrateTable {
     target_db: string;
     status: string;
     logs: string;
-    tasks?: MigrationTask[];
+    subtasks?: SubTaskInterface[];
     created_at?: string;
     updated_at?: string;
 }
 
-export interface MigrationTask {
+export interface SubTaskInterface {
     id: number;
-    migrate_table_id: number;
+    task: number;
     source_table: string;
     target_table: string;
     status: string;

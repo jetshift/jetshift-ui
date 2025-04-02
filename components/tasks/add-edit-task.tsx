@@ -21,13 +21,13 @@ import {
 } from "@/components/ui/select";
 import {Loader} from "lucide-react";
 import {useRouter} from 'next/navigation';
-import {MigrateTable} from "@/types/migration";
+import {TaskInterface} from "@/types/migration";
 import {taskService} from "@/lib/services/task-service";
 import {fetchDatabaseList} from "@/lib/services/database-service";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
     type?: string;
-    initialData?: Partial<MigrateTable>;
+    initialData?: Partial<TaskInterface>;
     isEdit?: boolean;
 };
 
@@ -43,7 +43,7 @@ export default function AddEditTaskComponent(
     const router = useRouter();
     const {toast} = useToast();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState<MigrateTable>({
+    const [formData, setFormData] = useState<TaskInterface>({
         id: initialData.id || undefined,
         type: initialData.type || type,
         title: initialData.title || "",

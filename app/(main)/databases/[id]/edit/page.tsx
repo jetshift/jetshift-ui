@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
 import api from "@/lib/api";
 import {useToast} from "@/hooks/use-toast";
-import {DatabaseFormData} from "@/types/migration";
+import {DatabaseInterface} from "@/types/migration";
 import AddEditDatabaseComponent from "@/components/databases/add-edit-database";
 
 interface EditDatabasePageProps {
@@ -16,7 +16,7 @@ export default function EditDatabasePage({params}: EditDatabasePageProps) {
 
     const {toast} = useToast()
     const {setBreadcrumbItems, setRightSection} = useLayout();
-    const [database, setDatabase] = useState<Partial<DatabaseFormData> | null>(null);
+    const [database, setDatabase] = useState<Partial<DatabaseInterface> | null>(null);
 
     const fetchDatabase = async () => {
         try {

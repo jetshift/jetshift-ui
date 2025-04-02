@@ -7,21 +7,21 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {Button} from "@/components/ui/button"
-import {MigrationTask} from "@/types/migration"
+import {SubTaskInterface} from "@/types/migration"
 import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon} from "lucide-react";
 import React from "react";
 
 export default function TaskTable(
     {
-        tasks,
+        subtasks,
         onMigrate,
         onViewSchema,
         onChangeTaskStatus,
     }: {
-        tasks: MigrationTask[]
-        onMigrate: (task: MigrationTask) => void
-        onViewSchema: (task: MigrationTask) => void
-        onChangeTaskStatus?: (task: MigrationTask, status: string) => void
+        subtasks: SubTaskInterface[]
+        onMigrate: (task: SubTaskInterface) => void
+        onViewSchema: (task: SubTaskInterface) => void
+        onChangeTaskStatus?: (task: SubTaskInterface, status: string) => void
     }) {
     return (
         <Table>
@@ -38,7 +38,7 @@ export default function TaskTable(
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {tasks.map((task) => {
+                {subtasks.map((task) => {
                     const totalSource = task.stats?.total_source_items ?? 0
                     const totalTarget = task.stats?.total_target_items ?? 0
                     const completePercentage =

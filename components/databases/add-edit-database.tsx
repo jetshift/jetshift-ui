@@ -22,10 +22,10 @@ import {
 import {Loader} from "lucide-react";
 import {useRouter} from 'next/navigation';
 import {createDatabase, updateDatabase} from "@/lib/services/database-service";
-import {DatabaseFormData} from "@/types/migration";
+import {DatabaseInterface} from "@/types/migration";
 
 type AddDatabaseProps = React.ComponentPropsWithoutRef<"div"> & {
-    initialData?: Partial<DatabaseFormData>;
+    initialData?: Partial<DatabaseInterface>;
     isEdit?: boolean;
 };
 
@@ -40,7 +40,7 @@ export default function AddEditDatabaseComponent(
     const router = useRouter();
     const {toast} = useToast();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState<DatabaseFormData>({
+    const [formData, setFormData] = useState<DatabaseInterface>({
         id: initialData.id || undefined,
         type: initialData.type || "source",
         dialect: initialData.dialect || "",
