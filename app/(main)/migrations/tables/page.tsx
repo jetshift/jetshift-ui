@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button"
-import ListMigrationTable from "@/components/migrations/table-components/migration-table";
+import ListTable from "@/components/migrations/table-components/migration-table";
 import React, {useEffect} from "react";
 import {useLayout} from "@/components/providers/layout-provider";
 
@@ -24,7 +24,7 @@ export default function About() {
     return (
         <>
             <div>
-                <ListMigrationTable className="mt-2" type="migration"/>
+                <ListTable className="mt-2" type="migration"/>
             </div>
         </>
     );

@@ -6,7 +6,7 @@ export const tableService = () => {
 
     const fetchTables = async (type?: string) => {
         try {
-            const response = await api.get(`/migrate/tables${type ? `?type=${type}` : ""}`);
+            const response = await api.get(`/tables${type ? `?type=${type}` : ""}`);
             const data = response.data;
 
             const mappedData: MigrateTable[] = data.data.map((job: any) => ({
@@ -56,7 +56,7 @@ export const tableService = () => {
 
     const viewSchema = async (migrate_table_id: number, task_id: number) => {
         try {
-            const response = await api.get(`/migrate/tables/${migrate_table_id}/schema/?task_id=${task_id}`);
+            const response = await api.get(`/tables/${migrate_table_id}/schema/?task_id=${task_id}`);
             return response.data;
         } catch (error: any) {
             toast({
@@ -69,7 +69,7 @@ export const tableService = () => {
 
     const startMigration = async (migrate_table_id: number, task_id: number) => {
         try {
-            const response = await api.get(`/migrate/tables/${migrate_table_id}/sync/?task_id=${task_id}`);
+            const response = await api.get(`/tables/${migrate_table_id}/sync/?task_id=${task_id}`);
             return response.data;
         } catch (error: any) {
             toast({

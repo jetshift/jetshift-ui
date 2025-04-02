@@ -14,7 +14,7 @@ interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> 
     type?: string;
 }
 
-export default function ListMigrationTable(
+export default function ListTable(
     {
         className,
         type,

@@ -51,7 +51,7 @@ const data = {
         },
         {
             title: "ETL Tasks",
-            url: "/etl",
+            url: "/etl-tasks",
             icon: RefreshCcwIcon,
             isActive: true,
         },

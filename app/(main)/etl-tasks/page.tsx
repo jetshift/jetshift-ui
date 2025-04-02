@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
 import {buttonVariants} from "@/components/ui/button"
 import Link from "next/link";
-import ListMigrationTable from "@/components/migrations/table-components/migration-table";
+import ListTable from "@/components/migrations/table-components/migration-table";
 
 export default function About() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
@@ -22,7 +22,7 @@ export default function About() {
 
     return (
         <div>
-            <ListMigrationTable className="mt-2" type="etl"/>
+            <ListTable className="mt-2" type="etl"/>
         </div>
     );
 }
