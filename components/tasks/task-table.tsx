@@ -109,7 +109,7 @@ export default function TaskTable(
                                                     title="Run the task"
                                                     onClick={() => onMigrate(task)}
                                                 >
-                                                    <RefreshCcwIcon/>
+                                                    <PlayIcon/>
                                                 </Button>
                                             )
 
@@ -134,7 +134,7 @@ export default function TaskTable(
                                                     title="Resume"
                                                     onClick={() => onChangeTaskStatus?.(task, 'syncing')}
                                                 >
-                                                    <PlayIcon/>
+                                                    <RefreshCcwIcon/>
                                                 </Button>
                                             )
 

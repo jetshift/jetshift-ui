@@ -79,7 +79,7 @@ export const subTaskService = () => {
 
     const changeTaskStatus = async (task_id: number, status: string) => {
         try {
-            const response = await api.get(`/task-details/${task_id}/change-task-status/?status=${status}`);
+            const response = await api.get(`/subtasks/${task_id}/change-task-status/?status=${status}`);
             return response.data;
         } catch (error: any) {
             toast({
