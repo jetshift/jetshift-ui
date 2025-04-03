@@ -251,7 +251,6 @@ export default function AddEditSubTaskComponent(
                                         value={formData.config?.extract_limit}
                                         onChange={handleInputEvent}
                                         onPaste={handleInputEvent}
-                                        required
                                     />
                                 </div>
                                 <div className="grid gap-2">
