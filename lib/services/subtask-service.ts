@@ -72,7 +72,7 @@ export const subTaskService = () => {
         } catch (error: any) {
             toast({
                 variant: "destructive",
-                description: `Error deleting database ID ${id}: ${error?.response?.data?.message || error.message}`,
+                description: `Error deleting sub task ID ${id}: ${error?.response?.data?.message || error.message}`,
             });
         }
     };

@@ -41,9 +41,10 @@ export default function AddEditSubTaskComponent(
     const router = useRouter();
     const {toast} = useToast();
     const [isLoading, setIsLoading] = useState(false);
+
     const [formData, setFormData] = useState<SubTaskInterface>({
         id: initialData.id || undefined,
-        task: initialData.task || "",
+        task: initialData?.task?.toString() || "",
         source_table: initialData.source_table || "",
         target_table: initialData.target_table || "",
         status: initialData.status || "idle",

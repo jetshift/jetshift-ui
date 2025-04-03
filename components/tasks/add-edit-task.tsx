@@ -47,8 +47,8 @@ export default function AddEditTaskComponent(
         id: initialData.id || undefined,
         type: initialData.type || type,
         title: initialData.title || "",
-        source_db: initialData.source_db || "",
-        target_db: initialData.target_db || "",
+        source_db: initialData.source_db || undefined,
+        target_db: initialData.target_db || undefined,
         status: initialData.status || "idle",
         logs: initialData.logs || "",
     });
@@ -89,15 +89,6 @@ export default function AddEditTaskComponent(
         e.preventDefault();
         setIsLoading(true);
 
-        if (!formData.source_db || !formData.target_db) {
-            toast({
-                variant: "destructive",
-                description: "Source and target databases are required.",
-            });
-            setIsLoading(false);
-            return;
-        }
-
         const success = isEdit
             ? await updateTask(formData)
             : await createTask(formData);
@@ -126,9 +117,6 @@ export default function AddEditTaskComponent(
                     <CardTitle className="text-xl">
                         {isEdit ? "Edit Task" : "Add Task"}
                     </CardTitle>
-                    <CardDescription>
-                        {isEdit ? "Update your database connection" : "Provide your database details"}
-                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
@@ -160,11 +148,11 @@ export default function AddEditTaskComponent(
                             <div className="grid gap-2">
                                 <Label htmlFor="dialect">Source Database</Label>
                                 <Select
-                                    value={formData.source_db}
+                                    value={formData.source_db?.toString() || ""}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            source_db: value,
+                                            source_db: parseInt(value, 10),
                                         }))
                                     }
                                 >
@@ -181,7 +169,7 @@ export default function AddEditTaskComponent(
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-                                {formData.source_db === "" && (
+                                {formData.target_db === undefined && (
                                     <span className="text-red-500 text-sm mt-1">Field is required.</span>
                                 )}
                             </div>
@@ -191,11 +179,11 @@ export default function AddEditTaskComponent(
                             <div className="grid gap-2">
                                 <Label htmlFor="dialect">Target Database</Label>
                                 <Select
-                                    value={formData.target_db}
+                                    value={formData.target_db?.toString() || ""}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            target_db: value,
+                                            target_db: parseInt(value, 10),
                                         }))
                                     }
                                 >
@@ -212,7 +200,7 @@ export default function AddEditTaskComponent(
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-                                {formData.target_db === "" && (
+                                {formData.target_db === undefined && (
                                     <span className="text-red-500 text-sm mt-1">Field is required.</span>
                                 )}
                             </div>

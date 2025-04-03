@@ -25,8 +25,8 @@ export interface TaskInterface {
     id?: number;
     type?: string;
     title: string;
-    source_db: string;
-    target_db: string;
+    source_db?: number;
+    target_db?: number;
     status: string;
     logs: string;
     subtasks?: SubTaskInterface[];

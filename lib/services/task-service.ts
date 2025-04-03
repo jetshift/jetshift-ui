@@ -66,6 +66,18 @@ export const taskService = () => {
         }
     };
 
+    const getTaskById = async (id: number) => {
+        try {
+            const response = await api.get(`/tasks/${id}/`);
+            return response.data.data;
+        } catch (error: any) {
+            toast({
+                variant: "destructive",
+                description: `Error fetching task ID ${id}: ${error?.response?.data?.message || error.message}`,
+            });
+        }
+    };
+
     const updateTask = async (formData: any): Promise<boolean> => {
         try {
             const response = await api.patch(`/tasks/${formData.id}/`, formData); // include ID here
@@ -136,5 +148,5 @@ export const taskService = () => {
         }
     };
 
-    return {fetchTasks, createTask, updateTask, deleteTaskById, viewSchema, startMigration};
+    return {fetchTasks, createTask, getTaskById, updateTask, deleteTaskById, viewSchema, startMigration};
 };

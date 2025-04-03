@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Expand, XIcon} from "lucide-react";
+import {Expand, PencilIcon, XIcon} from "lucide-react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import TaskTable from "@/components/tasks/task-table";
 import SchemaViewer from "@/components/tasks/schema-viewer";
@@ -144,6 +144,12 @@ export default function ListTable(
                                 >
                                     <Expand/>
                                 </Button>
+
+                                <Link href={`${pathname}/${table.id}/edit`}>
+                                    <Button variant="outline" size="icon" title="Edit">
+                                        <PencilIcon/>
+                                    </Button>
+                                </Link>
 
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
