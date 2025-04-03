@@ -30,6 +30,9 @@ import {
     checkDatabaseConnection,
     deleteDatabaseById,
 } from "@/lib/services/database-service";
+import LoaderSkeleton from "@/components/shared/loader-skeleton";
+import EmptyState from "@/components/shared/empty-state";
+import {usePathname} from "next/navigation";
 
 interface Database {
     id: number;
@@ -55,15 +58,19 @@ export default function ListDatabaseComponent(
         type,
         ...props
     }: ListDatabaseProps) {
+    const pathname = usePathname();
     const {toast} = useToast();
+
+    const [loading, setLoading] = useState(true);
+    const [showLoader, setShowLoader] = useState(true);
     const [databases, setDatabases] = useState<Database[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const isFetchedDatabases = useRef(false);
     const [isCheckingConnection, setCheckingConnection] = useState<number | null>(null);
     const [isDeletingDatabase, setDeletingDatabase] = useState<number | null>(null);
 
     const fetchDatabases = async (type?: string) => {
         setLoading(true);
+        setShowLoader(true);
         try {
             const data = await fetchDatabaseList(type);
             setDatabases(data);
@@ -74,6 +81,7 @@ export default function ListDatabaseComponent(
             });
         } finally {
             setLoading(false);
+            setTimeout(() => setShowLoader(false), 300);
         }
     };
 
@@ -96,8 +104,14 @@ export default function ListDatabaseComponent(
         }
     }, [type]);
 
-    if (loading) {
-        return <p>Loading databases...</p>;
+    // Loading
+    if (showLoader) {
+        return <LoaderSkeleton loading={loading} className={className} {...props} />;
+    }
+
+    // Empty data
+    if (!loading && databases.length === 0) {
+        return <EmptyState message="No databases found!" actionHref={`${pathname}/add`} actionLabel="Add New Database"/>;
     }
 
     return (

@@ -14,6 +14,8 @@ import {useToast} from "@/hooks/use-toast"
 import {Button} from "@/components/ui/button";
 import api from "@/lib/api";
 import {MigrateDatabaseInterface} from "@/types/migration";
+import LoaderSkeleton from "@/components/shared/loader-skeleton";
+import EmptyState from "@/components/shared/empty-state";
 
 type ListDatabaseProps = React.ComponentPropsWithoutRef<"div">
 
@@ -22,14 +24,17 @@ export default function ListMigrationDatabase(
         className,
         ...props
     }: ListDatabaseProps) {
-
     const {toast} = useToast()
+    const [loading, setLoading] = useState(true);
+    const [showLoader, setShowLoader] = useState(true);
     const [databases, setDatabases] = useState<MigrateDatabaseInterface[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const isFetchedDatabases = useRef(false);
     const [isDeletingDatabase, setDeletingDatabase] = useState<number | null>(null);
 
     const fetchDatabases = async () => {
+        setLoading(true);
+        setShowLoader(true);
+
         try {
             const response = await api.get(`/migrate/databases/`);
 
@@ -42,6 +47,7 @@ export default function ListMigrationDatabase(
             })
         } finally {
             setLoading(false);
+            setTimeout(() => setShowLoader(false), 300);
         }
     };
 
@@ -65,8 +71,14 @@ export default function ListMigrationDatabase(
         }
     });
 
-    if (loading) {
-        return <p>Loading databases...</p>;
+    // Loading
+    if (showLoader) {
+        return <LoaderSkeleton loading={loading} className={className} {...props} />;
+    }
+
+    // Empty data
+    if (!loading && databases.length === 0) {
+        return <EmptyState message="No migration databases found!"/>;
     }
 
     return (

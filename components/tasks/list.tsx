@@ -23,6 +23,8 @@ import {TaskInterface} from "@/types/migration";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {subTaskService} from "@/lib/services/subtask-service";
+import LoaderSkeleton from "@/components/shared/loader-skeleton";
+import EmptyState from "@/components/shared/empty-state";
 
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -35,16 +37,17 @@ export default function ListTable(
         type,
         ...props
     }: ListMigrationTableProps) {
+    const pathname = usePathname();
+    const {subscribe} = useWebSocket();
+    const {toast} = useToast();
 
-    const [tables, setTables] = useState<TaskInterface[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showLoader, setShowLoader] = useState(true);
+    const [tables, setTables] = useState<TaskInterface[]>([]);
     const [selectedTable, setSelectedTable] = useState<TaskInterface | null>(null);
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
-    const {subscribe} = useWebSocket();
-    const {toast} = useToast();
-    const pathname = usePathname();
 
     const isFetchedTasks = useRef(false);
     const {fetchTasks, deleteTaskById, viewSchema, startMigration} = taskService();
@@ -59,6 +62,7 @@ export default function ListTable(
 
     const loadTables = async () => {
         setLoading(true);
+        setShowLoader(true);
         try {
             const data = await fetchTasks(type);
             setTables(data);
@@ -66,6 +70,7 @@ export default function ListTable(
             console.error(e);
         } finally {
             setLoading(false);
+            setTimeout(() => setShowLoader(false), 300); // delay for smooth fade-out
         }
     };
 
@@ -114,8 +119,17 @@ export default function ListTable(
         }
     }, [tables]);
 
-    if (loading) return <div>Loading...</div>;
+    // Loading
+    if (showLoader) {
+        return <LoaderSkeleton loading={loading} className={className} {...props} />;
+    }
 
+    // Empty data
+    if (!loading && tables.length === 0) {
+        return <EmptyState message="No tasks found!" actionHref={`${pathname}/add`} actionLabel="Create New Task"/>;
+    }
+
+    // Show data
     return (
         <div className={cn(className)} {...props}>
             <Table>

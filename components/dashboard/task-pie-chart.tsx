@@ -90,20 +90,26 @@ export function TaskPieChart({title, type}: ChartProps) {
                 <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
-                <ChartContainer
-                    config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
-                >
-                    <PieChart>
-                        <ChartTooltip content={<ChartTooltipContent hideLabel/>}/>
-                        <Pie
-                            data={chartData}
-                            dataKey="total"
-                            label
-                            nameKey="status"
-                        />
-                    </PieChart>
-                </ChartContainer>
+                {chartData.length === 0 ? (
+                    <div className="flex h-[250px] items-center justify-center text-muted-foreground text-sm">
+                        No data available
+                    </div>
+                ) : (
+                    <ChartContainer
+                        config={chartConfig}
+                        className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+                    >
+                        <PieChart>
+                            <ChartTooltip content={<ChartTooltipContent hideLabel/>}/>
+                            <Pie
+                                data={chartData}
+                                dataKey="total"
+                                label
+                                nameKey="status"
+                            />
+                        </PieChart>
+                    </ChartContainer>
+                )}
             </CardContent>
         </Card>
     )
