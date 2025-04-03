@@ -20,8 +20,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {SubTaskInterface} from "@/types/migration"
-import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon, XIcon} from "lucide-react";
+import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon, XIcon, PencilIcon} from "lucide-react";
 import React from "react";
+import Link from "next/link";
+import {usePathname} from "next/navigation";
 
 export default function TaskTable(
     {
@@ -37,6 +39,9 @@ export default function TaskTable(
         onChangeTaskStatus?: (task: SubTaskInterface, status: string) => void
         onDeleteSubtask?: (task: SubTaskInterface) => void
     }) {
+
+    const pathname = usePathname();
+
     return (
         <Table>
             <TableHeader>
@@ -166,6 +171,12 @@ export default function TaskTable(
                                         </Button>
                                     </a>
                                 )}
+
+                                <Link href={`${pathname}/sub-tasks/${task.id}/edit`}>
+                                    <Button variant="outline" size="icon" title="Edit">
+                                        <PencilIcon/>
+                                    </Button>
+                                </Link>
 
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>

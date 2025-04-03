@@ -53,7 +53,19 @@ export const subTaskService = () => {
         }
     };
 
-    const deleteSubTaskById = async (id: number, refreshCallback: () => void) => {
+    const getSubTaskById = async (id: number) => {
+        try {
+            const response = await api.get(`/subtasks/${id}/`);
+            return response.data.data;
+        } catch (error: any) {
+            toast({
+                variant: "destructive",
+                description: `Error fetching database ID ${id}: ${error?.response?.data?.message || error.message}`,
+            });
+        }
+    };
+
+    const deleteSubTaskById = async (id: number) => {
         try {
             const response = await api.delete(`/subtasks/${id}/`);
             return response.data;
@@ -78,5 +90,5 @@ export const subTaskService = () => {
         }
     };
 
-    return {createSubTask, updateSubTask, deleteSubTaskById, changeTaskStatus};
+    return {createSubTask, updateSubTask, getSubTaskById, deleteSubTaskById, changeTaskStatus};
 };

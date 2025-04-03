@@ -186,7 +186,7 @@ export default function ListTable(
 
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-semibold">Sub Tasks of {selectedTable.title}</h2>
-                        <Link className={buttonVariants({variant: "outline"})} href={`${pathname}/add-sub-task`}>
+                        <Link className={buttonVariants({variant: "outline"})} href={`${pathname}/sub-tasks/add`}>
                             Add Sub Task
                         </Link>
                     </div>
