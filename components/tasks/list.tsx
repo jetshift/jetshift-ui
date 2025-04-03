@@ -7,7 +7,7 @@ import {taskService} from "@/lib/services/task-service";
 import {useWebSocket} from "@/components/providers/web-socket-provider";
 import {useToast} from "@/hooks/use-toast";
 import {cn} from "@/lib/utils";
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -20,6 +20,8 @@ import {
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import {TaskInterface} from "@/types/migration";
+import Link from "next/link";
+import {usePathname} from "next/navigation";
 
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -43,6 +45,7 @@ export default function ListTable(
     const {fetchTasks, deleteTaskById, viewSchema, startMigration, changeTaskStatus} = taskService();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (!isFetchedTasks.current) {
@@ -177,7 +180,14 @@ export default function ListTable(
             {/* Sub tasks */}
             {selectedTable && (
                 <div className="mt-6">
-                    <h2 className="text-xl font-semibold mb-4">Tasks for {selectedTable.title}</h2>
+
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-semibold">Sub Tasks of {selectedTable.title}</h2>
+                        <Link className={buttonVariants({ variant: "outline" })} href={`${pathname}/add-sub-task`}>
+                            Add Sub Task
+                        </Link>
+                    </div>
+
                     <TaskTable
                         subtasks={selectedTable.subtasks}
                         onMigrate={async (task) => {
@@ -207,6 +217,7 @@ export default function ListTable(
                 </div>
             )}
 
+            {/* Schema viewer */}
             <SchemaViewer open={openSchema} onOpenChange={setOpenSchema} schemaData={schemaData}/>
         </div>
     );

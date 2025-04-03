@@ -35,25 +35,25 @@ export interface TaskInterface {
 }
 
 export interface SubTaskInterface {
-    id: number;
-    task: number;
+    id?: number;
+    task?: string;
     source_table: string;
     target_table: string;
     status: string;
-    config: {
-        live_schema: boolean;
-        primary_id: string;
-        extract_offset: number;
-        extract_limit: number;
-        extract_chunk_size: number;
-        truncate_table: boolean;
-        load_chunk_size: number;
-        sleep_interval: number;
+    config?: {
+        live_schema?: boolean;
+        primary_id?: string;
+        extract_offset?: number;
+        extract_limit?: number;
+        extract_chunk_size?: number;
+        truncate_table?: boolean;
+        load_chunk_size?: number;
+        sleep_interval?: number;
     };
-    stats: {
+    stats?: {
         total_source_items: number;
         total_target_items: number;
     };
-    deployment_id: string;
+    deployment_id?: string;
     error: string;
 }

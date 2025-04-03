@@ -102,6 +102,7 @@ export default function AddEditTaskComponent(
             ? await updateTask(formData)
             : await createTask(formData);
 
+        // Redirect logic
         if (success) {
             if (type == 'etl') {
                 setTimeout(() => {
