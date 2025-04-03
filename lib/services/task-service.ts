@@ -136,18 +136,5 @@ export const taskService = () => {
         }
     };
 
-    const changeTaskStatus = async (task_id: number, status: string) => {
-        try {
-            const response = await api.get(`/task-details/${task_id}/change-task-status/?status=${status}`);
-            return response.data;
-        } catch (error: any) {
-            toast({
-                variant: "destructive",
-                description: `Failed to change task status: ${error?.response?.data?.message || error.message}`,
-            });
-            throw error;
-        }
-    };
-
-    return {fetchTasks, createTask, updateTask, deleteTaskById, viewSchema, startMigration, changeTaskStatus};
+    return {fetchTasks, createTask, updateTask, deleteTaskById, viewSchema, startMigration};
 };

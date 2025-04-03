@@ -7,8 +7,20 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {Button} from "@/components/ui/button"
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
 import {SubTaskInterface} from "@/types/migration"
-import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon} from "lucide-react";
+import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon, XIcon} from "lucide-react";
 import React from "react";
 
 export default function TaskTable(
@@ -17,11 +29,13 @@ export default function TaskTable(
         onMigrate,
         onViewSchema,
         onChangeTaskStatus,
+        onDeleteSubtask
     }: {
         subtasks: SubTaskInterface[]
         onMigrate: (task: SubTaskInterface) => void
         onViewSchema: (task: SubTaskInterface) => void
         onChangeTaskStatus?: (task: SubTaskInterface, status: string) => void
+        onDeleteSubtask?: (task: SubTaskInterface) => void
     }) {
     return (
         <Table>
@@ -152,6 +166,37 @@ export default function TaskTable(
                                         </Button>
                                     </a>
                                 )}
+
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            title="Delete Subtask"
+                                            className="text-red-600 hover:text-red-700 hover:bg-red-300"
+                                        >
+                                            <XIcon/>
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This will permanently delete the subtask <strong>{task.source_table} ➔ {task.target_table}</strong> and cannot be undone.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={() => onDeleteSubtask?.(task)}
+                                                className="bg-red-600 hover:bg-red-700 text-white"
+                                            >
+                                                Delete
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+
                             </TableCell>
                         </TableRow>
                     )

@@ -56,14 +56,7 @@ export const subTaskService = () => {
     const deleteSubTaskById = async (id: number, refreshCallback: () => void) => {
         try {
             const response = await api.delete(`/subtasks/${id}/`);
-            const data = response.data;
-
-            if (data.success) {
-                refreshCallback();
-                toast({description: `${data.message}`});
-            } else {
-                toast({variant: "destructive", description: `${data.message}`});
-            }
+            return response.data;
         } catch (error: any) {
             toast({
                 variant: "destructive",
@@ -72,5 +65,18 @@ export const subTaskService = () => {
         }
     };
 
-    return {createSubTask, updateSubTask, deleteSubTaskById};
+    const changeTaskStatus = async (task_id: number, status: string) => {
+        try {
+            const response = await api.get(`/task-details/${task_id}/change-task-status/?status=${status}`);
+            return response.data;
+        } catch (error: any) {
+            toast({
+                variant: "destructive",
+                description: `Failed to change task status: ${error?.response?.data?.message || error.message}`,
+            });
+            throw error;
+        }
+    };
+
+    return {createSubTask, updateSubTask, deleteSubTaskById, changeTaskStatus};
 };

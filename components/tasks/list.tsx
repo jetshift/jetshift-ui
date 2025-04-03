@@ -22,6 +22,7 @@ import {
 import {TaskInterface} from "@/types/migration";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
+import {subTaskService} from "@/lib/services/subtask-service";
 
 
 interface ListMigrationTableProps extends React.ComponentPropsWithoutRef<"div"> {
@@ -41,11 +42,13 @@ export default function ListTable(
     const [schemaData, setSchemaData] = useState(null);
     const [openSchema, setOpenSchema] = useState(false);
 
-    const isFetchedTasks = useRef(false);
-    const {fetchTasks, deleteTaskById, viewSchema, startMigration, changeTaskStatus} = taskService();
     const {subscribe} = useWebSocket();
     const {toast} = useToast();
     const pathname = usePathname();
+
+    const isFetchedTasks = useRef(false);
+    const {fetchTasks, deleteTaskById, viewSchema, startMigration} = taskService();
+    const {deleteSubTaskById, changeTaskStatus} = subTaskService();
 
     useEffect(() => {
         if (!isFetchedTasks.current) {
@@ -183,7 +186,7 @@ export default function ListTable(
 
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-semibold">Sub Tasks of {selectedTable.title}</h2>
-                        <Link className={buttonVariants({ variant: "outline" })} href={`${pathname}/add-sub-task`}>
+                        <Link className={buttonVariants({variant: "outline"})} href={`${pathname}/add-sub-task`}>
                             Add Sub Task
                         </Link>
                     </div>
@@ -212,6 +215,15 @@ export default function ListTable(
                             })
                             const updated = await fetchTasks(type)
                             setTables(updated)
+                        }}
+                        onDeleteSubtask={async (task) => {
+                            const response = await deleteSubTaskById(task.id, () => loadTables());
+                            toast({
+                                variant: response.success ? "default" : "destructive",
+                                description: response.message,
+                            });
+                            const updated = await fetchTasks(type);
+                            setTables(updated);
                         }}
                     />
                 </div>
