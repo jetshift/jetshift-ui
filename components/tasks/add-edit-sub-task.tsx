@@ -60,6 +60,7 @@ export default function AddEditSubTaskComponent(
                 ? Boolean(initialData.config.live_schema)
                 : true,
         },
+        cron: initialData.cron || "* * * * *",
         error: initialData.error || "",
     });
 
@@ -344,6 +345,21 @@ export default function AddEditSubTaskComponent(
                                         required
                                     />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6 mt-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="cron">Cron</Label>
+                                <Input
+                                    id="cron"
+                                    type="text"
+                                    name="cron"
+                                    value={formData.cron}
+                                    onChange={handleInputEvent}
+                                    onPaste={handleInputEvent}
+                                    placeholder="* * * * *"
+                                />
                             </div>
                         </div>
 

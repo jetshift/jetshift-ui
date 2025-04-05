@@ -55,5 +55,6 @@ export interface SubTaskInterface {
         total_target_items: number;
     };
     deployment_id?: string;
+    cron?: string;
     error: string;
 }

@@ -25,6 +25,7 @@ export const taskService = () => {
                     config: task.config,
                     stats: task.stats,
                     deployment_id: task.deployment_id,
+                    cron: task.cron,
                     error: task.error,
                 })) || [],
                 created_at: job.created_at,

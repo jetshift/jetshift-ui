@@ -49,11 +49,13 @@ export default function TaskTable(
                     <TableRow>
                         <TableHead>Source ➔ Target</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Chunk Size</TableHead>
+                        <TableHead>Extract Limit</TableHead>
+                        <TableHead>Load Chunk Size</TableHead>
                         <TableHead>Source Items</TableHead>
                         <TableHead>Target Items</TableHead>
                         <TableHead>Progress</TableHead>
-                        <TableHead>Error</TableHead>
+                        <TableHead>Cron</TableHead>
+                        {/*<TableHead>Error</TableHead>*/}
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -79,17 +81,19 @@ export default function TaskTable(
                                         )}
                                     </div>
                                 </TableCell>
-                                <TableCell>{task.config?.extract_chunk_size ?? "N/A"}</TableCell>
+                                <TableCell>{task.config?.extract_limit ?? "N/A"}</TableCell>
+                                <TableCell>{task.config?.load_chunk_size ?? "N/A"}</TableCell>
                                 <TableCell>{totalSource}</TableCell>
                                 <TableCell>{totalTarget}</TableCell>
                                 <TableCell>{completePercentage}%</TableCell>
-                                <TableCell>
-                                    {task.error ? (
-                                        <span className="text-red-500">{task.error}</span>
-                                    ) : (
-                                        <span className="text-green-600">No errors</span>
-                                    )}
-                                </TableCell>
+                                <TableCell>{task.cron ?? "N/A"}</TableCell>
+                                {/*<TableCell>*/}
+                                {/*    {task.error ? (*/}
+                                {/*        <span className="text-red-500">{task.error}</span>*/}
+                                {/*    ) : (*/}
+                                {/*        <span className="text-green-600">No errors</span>*/}
+                                {/*    )}*/}
+                                {/*</TableCell>*/}
                                 <TableCell className="text-right space-x-2">
                                     <Button
                                         variant="outline"

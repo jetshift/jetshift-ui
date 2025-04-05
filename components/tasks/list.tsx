@@ -254,7 +254,12 @@ export default function ListTable(
             {/* Schema viewer */}
             <SchemaViewer
                 open={openSchema}
-                onOpenChange={setOpenSchema}
+                onOpenChange={(open) => {
+                    setOpenSchema(open);
+                    if (!open) {
+                        loadTables(); // reload after modal closes
+                    }
+                }}
                 schemaData={schemaData}
                 onViewSchema={async (task) => {
                     const schema = await viewSchema(task.task, task.id, 'true');
