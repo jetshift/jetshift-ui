@@ -7,7 +7,6 @@ import {FolderOpenIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";
 
 export default function SchemaViewer({open, onOpenChange, schemaData, onViewSchema, task}: any) {
-    console.log(task)
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent side={"bottom"}>
