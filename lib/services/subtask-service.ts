@@ -65,7 +65,7 @@ export const subTaskService = () => {
         }
     };
 
-    const deleteSubTaskById = async (id: number) => {
+    const deleteSubTaskById = async (id1: number | undefined, p: () => Promise<void>) => {
         try {
             const response = await api.delete(`/subtasks/${id}/`);
             return response.data;

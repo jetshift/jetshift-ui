@@ -122,9 +122,9 @@ export const taskService = () => {
         }
     };
 
-    const viewSchema = async (migrate_table_id: number, task_id: number) => {
+    const viewSchema = async (migrate_table_id: number, task_id: number, create_schema: string) => {
         try {
-            const response = await api.get(`/tasks/${migrate_table_id}/schema/?task_id=${task_id}`);
+            const response = await api.get(`/tasks/${migrate_table_id}/schema/?task_id=${task_id}&create=${create_schema}`);
             return response.data;
         } catch (error: any) {
             toast({

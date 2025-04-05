@@ -45,9 +45,10 @@ export default function ListTable(
     const [showLoader, setShowLoader] = useState(true);
     const [tables, setTables] = useState<TaskInterface[]>([]);
     const [selectedTable, setSelectedTable] = useState<TaskInterface | null>(null);
-    const [schemaData, setSchemaData] = useState(null);
-    const [openSchema, setOpenSchema] = useState(false);
 
+    const [schemaData, setSchemaData] = useState(null);
+    const [schemaSubTask, setSchemaSubTask] = useState(null);
+    const [openSchema, setOpenSchema] = useState(false);
 
     const isFetchedTasks = useRef(false);
     const {fetchTasks, deleteTaskById, viewSchema, startMigration} = taskService();
@@ -223,8 +224,9 @@ export default function ListTable(
                             setTables(updated)
                         }}
                         onViewSchema={async (task) => {
-                            const schema = await viewSchema(task.task, task.id)
+                            const schema = await viewSchema(task.task, task.id, 'false')
                             setSchemaData(schema)
+                            setSchemaSubTask(task)
                             setOpenSchema(true)
                         }}
                         onChangeTaskStatus={async (task, status) => {
@@ -250,7 +252,17 @@ export default function ListTable(
             )}
 
             {/* Schema viewer */}
-            <SchemaViewer open={openSchema} onOpenChange={setOpenSchema} schemaData={schemaData}/>
+            <SchemaViewer
+                open={openSchema}
+                onOpenChange={setOpenSchema}
+                schemaData={schemaData}
+                onViewSchema={async (task) => {
+                    const schema = await viewSchema(task.task, task.id, 'true');
+                    setSchemaData(schema);
+                }}
+                task={schemaSubTask}
+            />
+
         </div>
     );
 }
