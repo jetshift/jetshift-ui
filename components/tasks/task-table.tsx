@@ -21,7 +21,7 @@ import {
 
 import {SubTaskInterface} from "@/types/migration"
 import {Loader2Icon, TableIcon, RefreshCcwIcon, LogsIcon, CircleStopIcon, PlayIcon, CheckIcon, XIcon, PencilIcon} from "lucide-react";
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
@@ -41,6 +41,7 @@ export default function TaskTable(
     }) {
 
     const pathname = usePathname();
+    const [loadingTaskId, setLoadingTaskId] = useState<number | null>(null);
 
     return (
         <>
@@ -112,9 +113,20 @@ export default function TaskTable(
                                                         variant="outline"
                                                         size="icon"
                                                         title="Run the task"
-                                                        onClick={() => onMigrate(task)}
+                                                        onClick={async () => {
+                                                            setLoadingTaskId(task.id);
+                                                            try {
+                                                                await onMigrate(task);
+                                                            } finally {
+                                                                setLoadingTaskId(null);
+                                                            }
+                                                        }}
                                                     >
-                                                        <PlayIcon/>
+                                                        {loadingTaskId === task.id ? (
+                                                            <Loader2Icon className="animate-spin w-4 h-4"/>
+                                                        ) : (
+                                                            <PlayIcon/>
+                                                        )}
                                                     </Button>
                                                 )
 
