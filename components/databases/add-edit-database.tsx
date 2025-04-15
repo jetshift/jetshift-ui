@@ -66,7 +66,7 @@ export default function AddEditDatabaseComponent(
         e.preventDefault();
         setIsLoading(true);
 
-        if (!formData.host || !formData.password) {
+        if (!formData.host) {
             toast({
                 variant: "destructive",
                 description: "Host and password are required.",
@@ -228,7 +228,6 @@ export default function AddEditDatabaseComponent(
                                         value={formData.password}
                                         onChange={handleInputEvent}
                                         onPaste={handleInputEvent}
-                                        required
                                     />
                                 </div>
                                 <div className="grid gap-2">
