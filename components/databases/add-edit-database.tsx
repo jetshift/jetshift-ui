@@ -69,7 +69,7 @@ export default function AddEditDatabaseComponent(
         if (!formData.host) {
             toast({
                 variant: "destructive",
-                description: "Host and password are required.",
+                description: "Host is required.",
             });
             setIsLoading(false);
             return;

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/jetshift-nextjs.iml" filepath="$PROJECT_DIR$/.idea/jetshift-nextjs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/jetshift-ui.iml" filepath="$PROJECT_DIR$/.idea/jetshift-ui.iml" />
     </modules>
   </component>
 </project>

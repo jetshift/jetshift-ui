@@ -14,7 +14,7 @@ export default function SchemaViewer({open, onOpenChange, schemaData, onViewSche
                     <SheetTitle>Schema Details</SheetTitle>
                     <SheetDescription>
                         {schemaData ? (
-                            <div>
+                            <div className="max-h-[70vh] overflow-y-auto pr-2"> {/* Apply max height and scroll */}
                                 <Tabs defaultValue="source_schema" className="w-full">
                                     <TabsList className="grid w-full grid-cols-2">
                                         <TabsTrigger value="source_schema">{schemaData.source.database} - {schemaData.source.table}</TabsTrigger>
