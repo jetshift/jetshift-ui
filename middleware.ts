@@ -25,9 +25,16 @@ export async function middleware(request: NextRequest) {
             if (refreshRes.ok) {
                 const data = await refreshRes.json()
                 const response = NextResponse.next()
+
+                const isProd = process.env.APP_ENV === 'production'
+                const cookieDomain = process.env.COOKIE_DOMAIN || 'localhost'
+                const cookieSameSite = (process.env.COOKIE_SAMESITE || 'lax') as 'lax' | 'strict' | 'none'
+
                 response.cookies.set('auth_token', data.access, {
                     httpOnly: true,
-                    secure: process.env.APP_ENV === 'production',
+                    secure: isProd,
+                    sameSite: cookieSameSite,
+                    domain: cookieDomain,
                     path: '/',
                     maxAge: 60 * 30, // 30 minutes
                 })
