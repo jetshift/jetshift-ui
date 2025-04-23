@@ -1,3 +1,15 @@
+interface UserInterface {
+    id: number;
+    name?: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+    email: number;
+    is_superuser: boolean;
+    is_active: boolean;
+    date_joined?: string;
+}
+
 interface DatabaseInterface {
     id?: number;
     type: string;

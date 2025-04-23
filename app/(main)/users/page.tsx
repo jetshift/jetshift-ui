@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {useLayout} from '@/components/providers/layout-provider';
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button"
-import ListDatabaseComponent from "@/components/databases/list";
+import ListUserComponent from "@/components/users/list";
 
 export default function About() {
     const {setBreadcrumbItems, setRightSection} = useLayout();
@@ -16,14 +16,14 @@ export default function About() {
         ]);
 
         setRightSection(
-            <Link className={buttonVariants({variant: "outline"})} href={"/databases/add"}>Add Database</Link>
+            <Link className={buttonVariants({variant: "outline"})} href={"/users/add"}>Add User</Link>
         );
     }, [setBreadcrumbItems, setRightSection]);
 
     return (
         <>
             <div>
-                <ListDatabaseComponent className="mt-2" />
+                <ListUserComponent className="mt-2" />
             </div>
         </>
     );
