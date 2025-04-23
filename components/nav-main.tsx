@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import {ChevronRight, type LucideIcon} from "lucide-react"
 import Link from "next/link"
 import * as React from "react"
 
@@ -21,23 +21,26 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 
-export function NavMain({
-                            items,
-                        }: {
-    items: {
-        title: string
-        url: string
-        icon?: LucideIcon
-        isActive?: boolean
-        items?: {
+export function NavMain(
+    {
+        items,
+        menuTitle
+    }: {
+        items: {
             title: string
             url: string
-        }[]
-    }[]
-}) {
+            icon?: LucideIcon
+            isActive?: boolean
+            items?: {
+                title: string
+                url: string
+            }[]
+        }[],
+        menuTitle: string
+    }) {
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
+            <SidebarGroupLabel>{menuTitle}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) =>
                     item.items ? (
@@ -50,9 +53,9 @@ export function NavMain({
                             <SidebarMenuItem>
                                 <CollapsibleTrigger asChild>
                                     <SidebarMenuButton tooltip={item.title}>
-                                        {item.icon && <item.icon />}
+                                        {item.icon && <item.icon/>}
                                         <span>{item.title}</span>
-                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
                                     </SidebarMenuButton>
                                 </CollapsibleTrigger>
                                 <CollapsibleContent>
@@ -74,7 +77,7 @@ export function NavMain({
                         <SidebarMenuItem key={item.title}>
                             <Link href={item.url}>
                                 <SidebarMenuButton tooltip={item.title}>
-                                    {item.icon && <item.icon />}
+                                    {item.icon && <item.icon/>}
                                     <span>{item.title}</span>
                                 </SidebarMenuButton>
                             </Link>

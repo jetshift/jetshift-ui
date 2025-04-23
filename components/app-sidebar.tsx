@@ -6,10 +6,10 @@ import {
     LayoutDashboardIcon,
     SendIcon,
     RefreshCcwIcon,
+    UsersIcon
 } from "lucide-react"
 
 import {NavMain} from "@/components/nav-main"
-// import {NavProjects} from "@/components/nav-projects"
 import {NavUser} from "@/components/nav-user"
 import {NavJetShift} from "@/components/nav-jetshift";
 import {
@@ -56,21 +56,29 @@ const data = {
             isActive: true,
         },
     ],
+    adminItems: [
+        {
+            title: "Users",
+            url: "/users",
+            icon: UsersIcon,
+            isActive: true,
+        },
+    ],
     // projects: [
     //     {
     //         name: "Design Engineering",
     //         url: "#",
-    //         icon: Database,
+    //         icon: RefreshCcwIcon,
     //     },
     //     {
     //         name: "Sales & Marketing",
     //         url: "#",
-    //         icon: Database,
+    //         icon: RefreshCcwIcon,
     //     },
     //     {
     //         name: "Travel",
     //         url: "#",
-    //         icon: Map,
+    //         icon: RefreshCcwIcon,
     //     },
     // ],
 }
@@ -80,6 +88,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
 };
 
 export function AppSidebar({user, ...props}: AppSidebarProps) {
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -101,7 +110,12 @@ export function AppSidebar({user, ...props}: AppSidebarProps) {
                     </SidebarMenu>
                 </SidebarGroup>
 
-                <NavMain items={data.navMain}/>
+                <NavMain items={data.navMain} menuTitle={'Menu'}/>
+
+                {user.is_superuser &&
+                  <NavMain items={data.adminItems} menuTitle={'Admin'}/>
+                }
+
                 {/*<NavProjects projects={data.projects}/>*/}
             </SidebarContent>
             <SidebarFooter>
