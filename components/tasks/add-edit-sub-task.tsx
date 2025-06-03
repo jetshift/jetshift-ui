@@ -130,12 +130,17 @@ export default function AddEditSubTaskComponent(
             if (type == 'etl') {
                 setTimeout(() => {
                     router.push('/etl-tasks');
-                }, 1500);
+                }, 1000);
+            }
+            if (type == 'cdc') {
+                setTimeout(() => {
+                    router.push('/cdc-tasks');
+                }, 1000);
             }
             if (type == 'migration') {
                 setTimeout(() => {
                     router.push('/migrations/tables');
-                }, 1500);
+                }, 1000);
             }
         }
 

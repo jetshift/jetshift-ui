@@ -6,6 +6,7 @@ import {
     LayoutDashboardIcon,
     SendIcon,
     RefreshCcwIcon,
+    DatabaseBackupIcon,
     UsersIcon
 } from "lucide-react"
 
@@ -53,6 +54,12 @@ const data = {
             title: "ETL Tasks",
             url: "/etl-tasks",
             icon: RefreshCcwIcon,
+            isActive: true,
+        },
+        {
+            title: "CDC Tasks",
+            url: "/cdc-tasks",
+            icon: DatabaseBackupIcon,
             isActive: true,
         },
     ],

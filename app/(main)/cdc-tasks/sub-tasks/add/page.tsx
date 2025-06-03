@@ -1,0 +1,29 @@
+'use client'
+
+import {useEffect} from "react";
+import {useLayout} from '@/components/providers/layout-provider';
+import AddEditSubTaskComponent from "@/components/tasks/add-edit-sub-task";
+
+export default function AddDatabasePage() {
+    const {setBreadcrumbItems, setRightSection} = useLayout();
+
+    useEffect(() => {
+        setBreadcrumbItems([
+            {label: 'Home', href: '/'},
+            {label: "CDC Tasks", href: "/cdc-tasks"},
+            {label: "Add Sub Task"},
+        ]);
+
+        setRightSection(<span></span>);
+    }, [setBreadcrumbItems, setRightSection]);
+
+    return (
+        <>
+            <div className="flex flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+                <div className="flex w-full max-w-lg flex-col gap-6">
+                    <AddEditSubTaskComponent type={`cdc`}/>
+                </div>
+            </div>
+        </>
+    );
+}
