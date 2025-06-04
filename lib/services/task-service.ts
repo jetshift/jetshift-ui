@@ -11,6 +11,7 @@ export const taskService = () => {
 
             const mappedData: TaskInterface[] = data.data.map((job: any) => ({
                 id: job.id,
+                type: job.type,
                 title: job.title,
                 source_db: job.source_database?.title || '',
                 target_db: job.target_database?.title || '',
@@ -136,10 +137,15 @@ export const taskService = () => {
         }
     };
 
-    const startMigration = async (migrate_table_id: number, task_id: number) => {
+    const startMigration = async (task_type, task_id: number, subtask_id: number) => {
         try {
-            const response = await api.get(`/tasks/${migrate_table_id}/sync/?task_id=${task_id}`);
-            return response.data;
+            if (task_type === 'cdc') {
+                const response = await api.get(`/subtasks/${task_id}/cdc/`);
+                return response.data;
+            } else {
+                const response = await api.get(`/tasks/${task_id}/sync/?task_id=${subtask_id}`);
+                return response.data;
+            }
         } catch (error: any) {
             toast({
                 variant: "destructive",

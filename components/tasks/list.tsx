@@ -215,7 +215,7 @@ export default function ListTable(
                     <TaskTable
                         subtasks={selectedTable.subtasks}
                         onMigrate={async (task) => {
-                            const response = await startMigration(task.task, task.id)
+                            const response = await startMigration(selectedTable.type, task.task, task.id)
                             toast({
                                 variant: response.success ? "default" : "destructive",
                                 description: response.message,
