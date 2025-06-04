@@ -140,7 +140,7 @@ export const taskService = () => {
     const startMigration = async (task_type, task_id: number, subtask_id: number) => {
         try {
             if (task_type === 'cdc') {
-                const response = await api.get(`/subtasks/${task_id}/cdc/`);
+                const response = await api.get(`/subtasks/${subtask_id}/cdc/`);
                 return response.data;
             } else {
                 const response = await api.get(`/tasks/${task_id}/sync/?task_id=${subtask_id}`);
